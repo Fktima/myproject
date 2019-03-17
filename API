@@ -31,6 +31,47 @@ paths:
             type: object
             items:
               $ref: "#/definitions/Gene"
+  /gene/findByProteinProduct:
+    get:
+      tags:
+      - "gene"
+      summary: "Finds information based on protein product name"
+      description: " A protein name can be provided'"
+      parameters:
+      - in: "query"
+        name: proteinName
+        description: "The name of the protein product of gene to return"
+        required: true
+        type: string
+        items:
+          type: string
+      responses: 
+        200:
+          description: "successful operation"
+          schema:
+            type: object
+            items:
+              $ref: "#/definitions/Gene"
         400: 
-          desctiption: "invalid gene identifier"
-    /gene/finds
+          description: "invalid protein name"   
+  /gene/findsByGenbankAcession:
+    get:
+      tags:
+      - "gene"
+      summary: "Finds information based on Genbank accession"
+      description: " A Genbank accsesion can be provided'"
+      parameters:
+      - in: "query"
+        name: genbankAccession
+        description: "The accession code of gene to return"
+        required: true
+        type: string
+      responses: 
+        200:
+          description: "successful operation"
+          schema:
+            type: object
+            items:
+              $ref: "#/definitions/Gene"
+        400: 
+          description: "invalid Genbank accesion number" 
