@@ -1,0 +1,36 @@
+swagger: "2.0"
+info:
+  description: "This is a simple genome browser to look at genes in human chromosome 2. The data is retrieved from Genbank and a summary of the gene and its protein product will be displayed along with restricition enzyme cuts. "
+  version: "1.0.0"
+  title: "Genome Browser"
+
+host: "notdefined.yet"
+basePath: "/v2"
+schemes:
+- "https"
+- "http"
+paths:
+  /gene/findByGeneIdentifier:
+    get:
+      tags:
+      - "gene"
+      summary: "Finds information based on gene identifiers"
+      description: " A single gene identifier can be provided'"
+      parameters:
+      - in: "query"
+        name: identifier
+        description: "Gene identifier of gene to return"
+        required: true
+        type: string
+        items:
+          type: string
+      responses: 
+        200:
+          description: "successfull operation"
+          schema:
+            type: object
+            items:
+              $ref: "#/definitions/Gene"
+        400: 
+          desctiption: "invalid gene identifier"
+    /gene/finds
