@@ -1,6 +1,6 @@
 swagger: "2.0"
 info:
-  description: "This is a simple genome browser to look at genes in human chromosome 2. The data is retrieved from Genbank and a summary of the gene and its protein product will be displayed along with restricition enzyme cuts. "
+  description: "This is a simple genome browser to look at genes in human chromosome 28. The data is retrieved from Genbank and a summary of the gene and its protein product will be displayed along with restricition enzyme cuts. "
   version: "1.0.0"
   title: "Genome Browser"
 
@@ -10,68 +10,24 @@ schemes:
 - "https"
 - "http"
 paths:
-  /gene/findByGeneIdentifier:
+  /entry:
     get:
-      tags:
-      - "gene"
-      summary: "Finds information based on gene identifiers"
-      description: " A single gene identifier can be provided'"
+      summary: "Finds information on gene"
+      description: " Returns information based on accession code, protein product name, chromosomal location or gene identifier"
       parameters:
-      - in: "query"
-        name: identifier
-        description: "Gene identifier of gene to return"
-        required: true
+      - name: accessionCode
+        in: query
+        required: false
         type: string
-        items:
-          type: string
-      responses: 
-        200:
-          description: "successfull operation"
-          schema:
-            type: object
-            items:
-              $ref: "#/definitions/Gene"
-  /gene/findByProteinProduct:
-    get:
-      tags:
-      - "gene"
-      summary: "Finds information based on protein product name"
-      description: " A protein name can be provided'"
-      parameters:
-      - in: "query"
-        name: proteinName
-        description: "The name of the protein product of gene to return"
-        required: true
+        description: "The unque identifier for an entry"
+      - name: chromosomalLocation
+        in: query
+        required: false
         type: string
-        items:
-          type: string
-      responses: 
-        200:
-          description: "successful operation"
-          schema:
-            type: object
-            items:
-              $ref: "#/definitions/Gene"
-        400: 
-          description: "invalid protein name"   
-  /gene/findsByGenbankAcession:
-    get:
-      tags:
-      - "gene"
-      summary: "Finds information based on Genbank accession"
-      description: " A Genbank accsesion can be provided'"
-      parameters:
-      - in: "query"
-        name: genbankAccession
-        description: "The accession code of gene to return"
-        required: true
+        description: "The chromosomal ocation used to identify an entry"
+      - name: gene
+        in: query
+        required: false
         type: string
-      responses: 
-        200:
-          description: "successful operation"
-          schema:
-            type: object
-            items:
-              $ref: "#/definitions/Gene"
-        400: 
-          description: "invalid Genbank accesion number" 
+        description: "The gene identifier for an entry"
+        
