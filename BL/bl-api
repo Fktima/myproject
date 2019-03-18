@@ -1,0 +1,36 @@
+
+from flask import Flask
+from flask import jsonify, url_for
+app = Flask(__name__)
+app.config["DEBUG"]= True
+
+gene_identifier = 'sd234'
+accession ='1234'
+protein_product='kinase'
+chromosomal_location=' 7q31.d'
+DNA_seq='ATATAGTATA'
+AA_seq ='MAATAAASSLQMATTRPSISAASSKARTYVVGANPRNAYKIACTPHLSNLGCLRNDSALP \
+ASKKSFSFSTKAMSESSESKASSGLPIDLRGKRAFIAGIADDNGYGWAVAKSLAAAGAEI\
+LVGTWVPALNIFETSLRRGKFDQSRVLPDGSLMEIKKVYPLDAVFDNPEDVPEDVKANKR\
+YAGSSNWTVQEAAECVRQDFGSIDILVHSLANGPEVSKPLLETSRKGYLAAISASSYSFV\
+SLLSHFLPIMNPGGASISLTYIASERIIPGYGGGMSSAKAALESDTRVLAFEAGRKQNIR\
+VNTISAGPLGSRAAKAIGFIDTMIEYSYNNAPIQKTLTADEVGNAAAFLVSPLASAITGA\
+TIYVDNGLNSMGVALDSPVFKDLNK'
+codon_usage ='this is a table'
+restriction_enzyme_sites = ' these are restriction enzyme sites'
+
+identifier = '1234'
+
+@app.route('/', methods=['GET'])
+def home():
+    """ Returns the home page. """
+    return "Welcome to the Genome browser! Please input your query here"
+
+@app.route('/gene', methods=['GET'])
+def display_summary:
+    """Returns the summary of the gene. """
+    if identifier == gene_identifier  or identifier == accession or identifier == protein_product or identifier == chromosomal_location:
+          return DNA_seq
+        
+if __name__ == '__main__':
+    app.run()
