@@ -37,18 +37,22 @@ def queryChromosomalLocation( chromosomal_loc):
 def displayDNASeq(query):
     """ displays DNA seq associated with the query"""
     return DNA_seq
-def displayAASeq(DNA_seq):
+    
+def displayAASeq(query):
     """ displays the amino acid sequence
-    parameters: DNA_seq, type string
+    parameters: query, type string
     returns the amino acid sequence"""
     return aminoacid_sequence
+    
+   
 def displayCodingSeq(query):
     """ displays the coding region
     Parameters: query, type string
-    Ouput: CDS
-    return CDS
+    Ouput: CDS   
     """
     return CDS
+    
+    
 def displayCodonUsage(CDS):
     """ displays the codon Usage
     parameters: query, type string
@@ -57,20 +61,26 @@ def displayCodonUsage(CDS):
     return codon_usage
 
 
-def accessionCode(accession_code):
-    the_DNA_Seq =displayDNASeq(accession_code)
-    print(the_DNA_Seq)
+
+def summaryUsingAccessionCode(accession_code):
+    the_DNA_seq =displayDNASeq(accession_code)
+    the_AA_seq = displayAASeq(accession_code)
+    the_coding_seq = displayCodingSeq(accession_code)
+    the_codon_usage = displayCodonUsage(accession_code)
+    print(the_DNA_seq)
+    print(the_AA_seq)
+    print(the_coding_seq)
+    print(the_codon_usage)
+
 
 # Dummy code
 
-accession_code = '1234'
+an_accession_code = '1234'
 DNA_seq = 'ATATAT'
+aminoacid_sequence = 'qwegduie'
+CDS ='coding se'
+codon_usage =' this is a codon sequenc'
 
+query = summaryUsingAccessionCode(an_accession_code)
 
-#you should be showing all the exons, what you don't show is if there are multiple different coding sequences coming from thesame sequence you only show the first because of alternative splicing
-
-
-queryy = accessionCode(accession_code)
-
-    
     
