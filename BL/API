@@ -1,0 +1,76 @@
+import re
+
+def queryAccessionCode( accession_code):
+    """It takes as nput the query which the user searches for
+        Parameters: accession_code, type string
+        Output: valid_acc_code
+    """
+    if valid_acc_code(accession_code) ==True:
+        valid_acc_code = accession_code
+        return valid_acc_code
+    else:
+        return "Query not valid"
+
+def queryProteinProduct(protein_name):
+    """It takes as nput the query which the user searches for
+        Parameters: protein_name, type string
+        Output: valid_protein_name
+    """
+    if valid_protein(protein_name) ==True:
+        valid_protein = protein_name
+        return valid_protein_name
+    else:
+        return "Query not valid"
+
+
+def queryChromosomalLocation( chromosomal_loc):
+    """It takes as nput the query which the user searches for
+        Parameters: chromosomal_loc, type string
+        Output: valid_chromosomal_loc
+    """
+    if valid_chromosomal_loc(chromosomal_loc) ==True:
+        valid_chromosomal_loc = chromosomal_loc
+        return valid_chromosomal_loc
+    else:
+        return "Query not valid"
+    
+def displayDNASeq(query):
+    """ displays DNA seq associated with the query"""
+    return DNA_seq
+def displayAASeq(DNA_seq):
+    """ displays the amino acid sequence
+    parameters: DNA_seq, type string
+    returns the amino acid sequence"""
+    return aminoacid_sequence
+def displayCodingSeq(query):
+    """ displays the coding region
+    Parameters: query, type string
+    Ouput: CDS
+    return CDS
+    """
+    return CDS
+def displayCodonUsage(CDS):
+    """ displays the codon Usage
+    parameters: query, type string
+    output: frequencies, type dictionary
+    """
+    return codon_usage
+
+
+def accessionCode(accession_code):
+    the_DNA_Seq =displayDNASeq(accession_code)
+    print(the_DNA_Seq)
+
+# Dummy code
+
+accession_code = '1234'
+DNA_seq = 'ATATAT'
+
+
+#you should be showing all the exons, what you don't show is if there are multiple different coding sequences coming from thesame sequence you only show the first because of alternative splicing
+
+
+queryy = accessionCode(accession_code)
+
+    
+    
