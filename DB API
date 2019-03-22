@@ -1,1 +1,41 @@
 
+''' DESCRIPTION - Use this module to access the databse layer
+    ===========
+    depending on the search parameters provided by the middle layer.
+    
+    connect(parameters...)
+        connects to the database.
+
+        returns a Connection object. Parameters will already
+        specified for the test databse.
+
+    Exceptions
+    ==========
+    Error information for this module is made through the following exceptions
+
+    Error
+        base class of other error exceptions
+        
+    Cursor methods
+    ==============    
+        The module should allow cursor .execute commands with the following methods
+
+    .get_accessionCode()
+        execute a database query
+
+        returns a sequence or sequence of sequences
+
+    .get_chromosomalLocation()
+        execute a database query
+
+        returns a sequence or sequence of sequences
+
+    .get_geneID()
+        execute a database query
+
+        returns a sequence or sequence of sequences
+        
+    .get_proteinID()
+        execute a database query for 
+
+        returns a sequence or sequence of sequences
