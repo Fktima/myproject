@@ -1,9 +1,17 @@
-def byAccessionCode(accession_code):
-    return accession_code
-def byProteinProduct(protein_name):
-    return protein_name
-def byChromosomalLoc(chromosomal_loc):
-    return chromosomal_loc
+class Search:
+    """ Class that retrieves the query given by the user
+    either as an AccessionCode, protein product name, Chromosomal location
+    or GenBank identifier
+    """
+    
+    def byAccessionCode(accession_code):
+        return accession_code
+    def byProteinProduct(protein_name):
+        return protein_name
+    def byChromosomalLoc(chromosomal_loc):
+        return chromosomal_loc
+    def byGenBankIdentifier(genBank_id):
+        return genBank_id
     
 
 class Display:
@@ -13,22 +21,24 @@ class Display:
         return (DNA_seq)
 
     def displayAASeq(query):
-        """ displays the amino acid sequence
+        """ d
+        isplays the amino acid sequence
         parameters: query, type string
         returns the amino acid sequence"""
         return aminoacid_sequence
 
     def displayCodingSeq(query):
-        """ displays the coding region
+        """
+        displays the coding region
         Parameters: query, type string
         Ouput: CDS
-        return CDS
         """
         return CDS
 
 
     def displayCodonUsage(query):
-        """ displays the codon Usage
+        """
+        displays the codon Usage
         parameters: query, type string
         output: frequencies, type dictionary
         """
@@ -55,7 +65,7 @@ def summaryUsingAccessionCode(accession_code):
     Parameters: accession code
     Output: a_summary, type dictionary
     """
-    a_query= byAccessionCode(accession_code)
+    a_query= Search.byAccessionCode(accession_code)
     a_summary = Display.summary(a_query)
     return a_summary
 
@@ -65,7 +75,7 @@ def summaryUsingProteinProduct(protein_name):
     Parameters: protein_name
     Output: a_summary, type dictionary
     """
-    a_query= byProteinProduct(protein_name)
+    a_query= Search.byProteinProduct(protein_name)
     a_summary = Display.summary(a_query)
     return a_summary
 
@@ -75,7 +85,17 @@ def summaryUsingChromosomalLoc(chromosomal_loc):
     Parameters: chromosomal_loc
     Output: a_summary, type dictionary
     """
-    a_query= byChromosomalLoc(chromosomal_loc)
+    a_query= Search.byChromosomalLoc(chromosomal_loc)
+    a_summary = Display.summary(a_query)
+    return a_summary
+
+def summaryUsingGenBankIdentifier(genBank_id):
+    """
+    Dislays the summary associated with the GenBank ID provided.
+    Parameters: genBank_id
+    Output: a_summary, type dictionary
+    """
+    a_query= Search.byGenBankIdentifier(genBank_id)
     a_summary = Display.summary(a_query)
     return a_summary
 
@@ -90,12 +110,12 @@ aminoacid_sequence = 'this is an amino acid sequence '
 CDS ='coding se'
 codon_usage =' this is a codon sequenc'
 chromosomal_loc ='18iq'
+genBank_id = '678'
 
 a_try = summaryUsingAccessionCode(an_accession_code)
 a_try2= summaryUsingProteinProduct(protein_name)
 a_try3 = summaryUsingChromosomalLoc(chromosomal_loc)
-print(a_try3)
-
-    
+a_try4 = summaryUsingGenBankIdentifier(genBank_id)
+print(a_try4)
 
     
