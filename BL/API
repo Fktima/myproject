@@ -1,86 +1,101 @@
-import re
-
-def queryAccessionCode( accession_code):
-    """It takes as nput the query which the user searches for
-        Parameters: accession_code, type string
-        Output: valid_acc_code
-    """
-    if valid_acc_code(accession_code) ==True:
-        valid_acc_code = accession_code
-        return valid_acc_code
-    else:
-        return "Query not valid"
-
-def queryProteinProduct(protein_name):
-    """It takes as nput the query which the user searches for
-        Parameters: protein_name, type string
-        Output: valid_protein_name
-    """
-    if valid_protein(protein_name) ==True:
-        valid_protein = protein_name
-        return valid_protein_name
-    else:
-        return "Query not valid"
-
-
-def queryChromosomalLocation( chromosomal_loc):
-    """It takes as nput the query which the user searches for
-        Parameters: chromosomal_loc, type string
-        Output: valid_chromosomal_loc
-    """
-    if valid_chromosomal_loc(chromosomal_loc) ==True:
-        valid_chromosomal_loc = chromosomal_loc
-        return valid_chromosomal_loc
-    else:
-        return "Query not valid"
+def byAccessionCode(accession_code):
+    return accession_code
+def byProteinProduct(protein_name):
+    return protein_name
+def byChromosomalLoc(chromosomal_loc):
+    return chromosomal_loc
     
-def displayDNASeq(query):
-    """ displays DNA seq associated with the query"""
-    return DNA_seq
-    
-def displayAASeq(query):
-    """ displays the amino acid sequence
-    parameters: query, type string
-    returns the amino acid sequence"""
-    return aminoacid_sequence
-    
-   
-def displayCodingSeq(query):
-    """ displays the coding region
-    Parameters: query, type string
-    Ouput: CDS   
-    """
-    return CDS
-    
-    
-def displayCodonUsage(CDS):
-    """ displays the codon Usage
-    parameters: query, type string
-    output: frequencies, type dictionary
-    """
-    return codon_usage
+
+class Display:
+
+    def displayDNASeq(query):
+        """ displays DNA seq associated with the query"""
+        return (DNA_seq)
+
+    def displayAASeq(query):
+        """ displays the amino acid sequence
+        parameters: query, type string
+        returns the amino acid sequence"""
+        return aminoacid_sequence
+
+    def displayCodingSeq(query):
+        """ displays the coding region
+        Parameters: query, type string
+        Ouput: CDS
+        return CDS
+        """
+        return CDS
 
 
+    def displayCodonUsage(query):
+        """ displays the codon Usage
+        parameters: query, type string
+        output: frequencies, type dictionary
+        """
+        return codon_usage
+    def summary(query):
+        """
+        displays the summary of DNA sequency, Aminoacid Sequence,
+        coding sequence and codon usage associated with the query.
+        Parameters: query
+        Output: summary, type dictionary
+        """
+    
+        summary = {
+            "dna_seq": Display.displayDNASeq(query),
+            "a_Seq":Display.displayAASeq(query),
+            "coding_seq": Display.displayCodingSeq(query),
+            "codon_usage": Display.displayCodonUsage(query)
+            }
+        return summary
 
 def summaryUsingAccessionCode(accession_code):
-    the_DNA_seq =displayDNASeq(accession_code)
-    the_AA_seq = displayAASeq(accession_code)
-    the_coding_seq = displayCodingSeq(accession_code)
-    the_codon_usage = displayCodonUsage(accession_code)
-    print(the_DNA_seq)
-    print(the_AA_seq)
-    print(the_coding_seq)
-    print(the_codon_usage)
+    """
+    Dislays the summary associated with the accession code provided.
+    Parameters: accession code
+    Output: a_summary, type dictionary
+    """
+    a_query= byAccessionCode(accession_code)
+    a_summary = Display.summary(a_query)
+    return a_summary
+
+def summaryUsingProteinProduct(protein_name):
+    """
+    Dislays the summary associated with the protein name provided.
+    Parameters: protein_name
+    Output: a_summary, type dictionary
+    """
+    a_query= byProteinProduct(protein_name)
+    a_summary = Display.summary(a_query)
+    return a_summary
+
+def summaryUsingChromosomalLoc(chromosomal_loc):
+    """
+    Dislays the summary associated with the chromosomal location provided.
+    Parameters: chromosomal_loc
+    Output: a_summary, type dictionary
+    """
+    a_query= byChromosomalLoc(chromosomal_loc)
+    a_summary = Display.summary(a_query)
+    return a_summary
 
 
-# Dummy code
+
+# This is the dummy code and data # 
 
 an_accession_code = '1234'
+protein_name = 'protein1'
 DNA_seq = 'ATATAT'
-aminoacid_sequence = 'qwegduie'
+aminoacid_sequence = 'this is an amino acid sequence '
 CDS ='coding se'
 codon_usage =' this is a codon sequenc'
+chromosomal_loc ='18iq'
 
-query = summaryUsingAccessionCode(an_accession_code)
+a_try = summaryUsingAccessionCode(an_accession_code)
+a_try2= summaryUsingProteinProduct(protein_name)
+a_try3 = summaryUsingChromosomalLoc(chromosomal_loc)
+print(a_try3)
+
+    
 
     
