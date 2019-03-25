@@ -3,16 +3,19 @@ class Search:
     either as an AccessionCode, protein product name, Chromosomal location
     or GenBank identifier
     """
-    
+
     def byAccessionCode(accession_code):
         return accession_code
+
     def byProteinProduct(protein_name):
         return protein_name
+
     def byChromosomalLoc(chromosomal_loc):
         return chromosomal_loc
+
     def byGenBankIdentifier(genBank_id):
         return genBank_id
-    
+
 
 class Display:
 
@@ -35,7 +38,6 @@ class Display:
         """
         return CDS
 
-
     def displayCodonUsage(query):
         """
         displays the codon Usage
@@ -43,6 +45,31 @@ class Display:
         output: frequencies, type dictionary
         """
         return codon_usage
+
+    def displayRestrictionSiteEcorI(query):
+        """
+        displays the sticky-end restriction enzyme sites for EcorI
+        :return: restr_Site_EcorI
+        type: string
+        """
+        return restr_site_EcorI
+
+    def displayRestrictionSiteBamHI(query):
+        """
+        displays the sticky-end restriction enzyme sites for  BamHI
+        :return: restr_Site_BamHI
+        type: string
+        """
+        return restr_site_BamHI
+
+    def displayRestrictionSiteBsuMI(query):
+        """
+        displays the sticky-end restriction enzyme sites for BsumI
+        # :return: restr_Site_BsumI
+        type: string
+        """
+        return restr_site_BsuMI
+
     def summary(query):
         """
         displays the summary of DNA sequency, Aminoacid Sequence,
@@ -50,14 +77,18 @@ class Display:
         Parameters: query
         Output: summary, type dictionary
         """
-    
+
         summary = {
             "dna_seq": Display.displayDNASeq(query),
-            "a_Seq":Display.displayAASeq(query),
+            "a_Seq": Display.displayAASeq(query),
             "coding_seq": Display.displayCodingSeq(query),
-            "codon_usage": Display.displayCodonUsage(query)
-            }
+            "codon_usage": Display.displayCodonUsage(query),
+            "restriction_site_EcorI" : Display.displayRestrictionSiteEcorI(query),
+            "restriction_site_BamHI": Display.displayRestrictionSiteBamHI(query),
+            "restriction_site_BsuMI": Display.displayRestrictionSiteBsuMI(query)
+        }
         return summary
+
 
 def summaryUsingAccessionCode(accession_code):
     """
@@ -65,9 +96,10 @@ def summaryUsingAccessionCode(accession_code):
     Parameters: accession code
     Output: a_summary, type dictionary
     """
-    a_query= Search.byAccessionCode(accession_code)
+    a_query = Search.byAccessionCode(accession_code)
     a_summary = Display.summary(a_query)
     return a_summary
+
 
 def summaryUsingProteinProduct(protein_name):
     """
@@ -75,9 +107,10 @@ def summaryUsingProteinProduct(protein_name):
     Parameters: protein_name
     Output: a_summary, type dictionary
     """
-    a_query= Search.byProteinProduct(protein_name)
+    a_query = Search.byProteinProduct(protein_name)
     a_summary = Display.summary(a_query)
     return a_summary
+
 
 def summaryUsingChromosomalLoc(chromosomal_loc):
     """
@@ -85,9 +118,10 @@ def summaryUsingChromosomalLoc(chromosomal_loc):
     Parameters: chromosomal_loc
     Output: a_summary, type dictionary
     """
-    a_query= Search.byChromosomalLoc(chromosomal_loc)
+    a_query = Search.byChromosomalLoc(chromosomal_loc)
     a_summary = Display.summary(a_query)
     return a_summary
+
 
 def summaryUsingGenBankIdentifier(genBank_id):
     """
@@ -95,27 +129,31 @@ def summaryUsingGenBankIdentifier(genBank_id):
     Parameters: genBank_id
     Output: a_summary, type dictionary
     """
-    a_query= Search.byGenBankIdentifier(genBank_id)
+    a_query = Search.byGenBankIdentifier(genBank_id)
     a_summary = Display.summary(a_query)
     return a_summary
 
 
-
-# This is the dummy code and data # 
+# This is the dummy code and data #
 
 an_accession_code = '1234'
 protein_name = 'protein1'
 DNA_seq = 'ATATAT'
 aminoacid_sequence = 'this is an amino acid sequence '
-CDS ='coding se'
-codon_usage =' this is a codon sequenc'
-chromosomal_loc ='18iq'
+CDS = 'coding se'
+codon_usage = ' this is a codon sequenc'
+chromosomal_loc = '18iq'
 genBank_id = '678'
-
+restr_site_EcorI = 'restriction site EcorI'
+restr_site_BamHI = 'restriction site BamHI'
+restr_site_BsuMI = 'restriction site BsuMI'
 a_try = summaryUsingAccessionCode(an_accession_code)
-a_try2= summaryUsingProteinProduct(protein_name)
+a_try2 = summaryUsingProteinProduct(protein_name)
 a_try3 = summaryUsingChromosomalLoc(chromosomal_loc)
 a_try4 = summaryUsingGenBankIdentifier(genBank_id)
 print(a_try4)
+
+
+
 
     
