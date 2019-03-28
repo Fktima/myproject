@@ -1,76 +1,159 @@
-import re
-
-def queryAccessionCode( accession_code):
-    """It takes as nput the query which the user searches for
-        Parameters: accession_code, type string
-        Output: valid_acc_code
+class Search:
+    """ Class that retrieves the query given by the user
+    either as an AccessionCode, protein product name, Chromosomal location
+    or GenBank identifier
     """
-    if valid_acc_code(accession_code) ==True:
-        valid_acc_code = accession_code
-        return valid_acc_code
-    else:
-        return "Query not valid"
 
-def queryProteinProduct(protein_name):
-    """It takes as nput the query which the user searches for
-        Parameters: protein_name, type string
-        Output: valid_protein_name
+    def byAccessionCode(accession_code):
+        return accession_code
+
+    def byProteinProduct(protein_name):
+        return protein_name
+
+    def byChromosomalLoc(chromosomal_loc):
+        return chromosomal_loc
+
+    def byGenBankIdentifier(genBank_id):
+        return genBank_id
+
+
+class Display:
+
+    def displayDNASeq(query):
+        """ displays DNA seq associated with the query"""
+        return (DNA_seq)
+
+    def displayAASeq(query):
+        """ d
+        isplays the amino acid sequence
+        parameters: query, type string
+        returns the amino acid sequence"""
+        return aminoacid_sequence
+
+    def displayCodingSeq(query):
+        """
+        displays the coding region
+        Parameters: query, type string
+        Ouput: CDS
+        """
+        return CDS
+
+    def displayCodonUsage(query):
+        """
+        displays the codon Usage
+        parameters: query, type string
+        output: frequencies, type dictionary
+        """
+        return codon_usage
+
+    def displayRestrictionSiteEcorI(query):
+        """
+        displays the sticky-end restriction enzyme sites for EcorI
+        :return: restr_Site_EcorI
+        type: string
+        """
+        return restr_site_EcorI
+
+    def displayRestrictionSiteBamHI(query):
+        """
+        displays the sticky-end restriction enzyme sites for  BamHI
+        :return: restr_Site_BamHI
+        type: string
+        """
+        return restr_site_BamHI
+
+    def displayRestrictionSiteBsuMI(query):
+        """
+        displays the sticky-end restriction enzyme sites for BsumI
+        # :return: restr_Site_BsumI
+        type: string
+        """
+        return restr_site_BsuMI
+
+    def summary(query):
+        """
+        displays the summary of DNA sequency, Aminoacid Sequence,
+        coding sequence and codon usage associated with the query.
+        Parameters: query
+        Output: summary, type dictionary
+        """
+
+        summary = {
+            "dna_seq": Display.displayDNASeq(query),
+            "a_Seq": Display.displayAASeq(query),
+            "coding_seq": Display.displayCodingSeq(query),
+            "codon_usage": Display.displayCodonUsage(query),
+            "restriction_site_EcorI" : Display.displayRestrictionSiteEcorI(query),
+            "restriction_site_BamHI": Display.displayRestrictionSiteBamHI(query),
+            "restriction_site_BsuMI": Display.displayRestrictionSiteBsuMI(query)
+        }
+        return summary
+
+
+def summaryUsingAccessionCode(accession_code):
     """
-    if valid_protein(protein_name) ==True:
-        valid_protein = protein_name
-        return valid_protein_name
-    else:
-        return "Query not valid"
-
-
-def queryChromosomalLocation( chromosomal_loc):
-    """It takes as nput the query which the user searches for
-        Parameters: chromosomal_loc, type string
-        Output: valid_chromosomal_loc
+    Dislays the summary associated with the accession code provided.
+    Parameters: accession code
+    Output: a_summary, type dictionary
     """
-    if valid_chromosomal_loc(chromosomal_loc) ==True:
-        valid_chromosomal_loc = chromosomal_loc
-        return valid_chromosomal_loc
-    else:
-        return "Query not valid"
-    
-def displayDNASeq(query):
-    """ displays DNA seq associated with the query"""
-    return DNA_seq
-def displayAASeq(DNA_seq):
-    """ displays the amino acid sequence
-    parameters: DNA_seq, type string
-    returns the amino acid sequence"""
-    return aminoacid_sequence
-def displayCodingSeq(query):
-    """ displays the coding region
-    Parameters: query, type string
-    Ouput: CDS
-    return CDS
+    a_query = Search.byAccessionCode(accession_code)
+    a_summary = Display.summary(a_query)
+    return a_summary
+
+
+def summaryUsingProteinProduct(protein_name):
     """
-    return CDS
-def displayCodonUsage(CDS):
-    """ displays the codon Usage
-    parameters: query, type string
-    output: frequencies, type dictionary
+    Dislays the summary associated with the protein name provided.
+    Parameters: protein_name
+    Output: a_summary, type dictionary
     """
-    return codon_usage
+    a_query = Search.byProteinProduct(protein_name)
+    a_summary = Display.summary(a_query)
+    return a_summary
 
 
-def accessionCode(accession_code):
-    the_DNA_Seq =displayDNASeq(accession_code)
-    print(the_DNA_Seq)
+def summaryUsingChromosomalLoc(chromosomal_loc):
+    """
+    Dislays the summary associated with the chromosomal location provided.
+    Parameters: chromosomal_loc
+    Output: a_summary, type dictionary
+    """
+    a_query = Search.byChromosomalLoc(chromosomal_loc)
+    a_summary = Display.summary(a_query)
+    return a_summary
 
-# Dummy code
 
-accession_code = '1234'
+def summaryUsingGenBankIdentifier(genBank_id):
+    """
+    Dislays the summary associated with the GenBank ID provided.
+    Parameters: genBank_id
+    Output: a_summary, type dictionary
+    """
+    a_query = Search.byGenBankIdentifier(genBank_id)
+    a_summary = Display.summary(a_query)
+    return a_summary
+
+
+# This is the dummy code and data #
+
+an_accession_code = '1234'
+protein_name = 'protein1'
 DNA_seq = 'ATATAT'
+aminoacid_sequence = 'this is an amino acid sequence '
+CDS = 'coding se'
+codon_usage = ' this is a codon sequenc'
+chromosomal_loc = '18iq'
+genBank_id = '678'
+restr_site_EcorI = 'restriction site EcorI'
+restr_site_BamHI = 'restriction site BamHI'
+restr_site_BsuMI = 'restriction site BsuMI'
+a_try = summaryUsingAccessionCode(an_accession_code)
+a_try2 = summaryUsingProteinProduct(protein_name)
+a_try3 = summaryUsingChromosomalLoc(chromosomal_loc)
+a_try4 = summaryUsingGenBankIdentifier(genBank_id)
+print(a_try4)
 
 
-#you should be showing all the exons, what you don't show is if there are multiple different coding sequences coming from thesame sequence you only show the first because of alternative splicing
 
 
-queryy = accessionCode(accession_code)
-
-    
     
