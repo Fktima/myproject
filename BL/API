@@ -1,3 +1,11 @@
+#!/usr/bin/python3
+"""
+------------------------------------------------------------------------------------------------------------------------
+This is the business logic API
+version: 1.0
+Author: Miruna Serian
+------------------------------------------------------------------------------------------------------------------------
+"""
 class Search:
     """ Class that retrieves the query given by the user
     either as an AccessionCode, protein product name, Chromosomal location
@@ -153,7 +161,3 @@ a_try3 = summaryUsingChromosomalLoc(chromosomal_loc)
 a_try4 = summaryUsingGenBankIdentifier(genBank_id)
 print(a_try4)
 
-
-
-
-    
