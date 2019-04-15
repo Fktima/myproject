@@ -88,7 +88,7 @@ class Display:
 
         summary = {
             "dna_seq": Display.displayDNASeq(query),
-            "a_Seq": Display.displayAASeq(query),
+            "aa_seq": Display.displayAASeq(query),
             "coding_seq": Display.displayCodingSeq(query),
             "codon_usage": Display.displayCodonUsage(query),
             "restriction_site_EcorI" : Display.displayRestrictionSiteEcorI(query),
@@ -142,6 +142,36 @@ def summaryUsingGenBankIdentifier(genBank_id):
     return a_summary
 
 
+class codonUsage:
+    """ workouts the codon usage and displays is as dictionary
+    which will be further converted into a table"""
+    def __init(self, dna_seq):
+        self.dna_seq=dna_seq
+
+    def codons(self):
+        codons =[]
+        for i in range(0, len(self), 3):
+            codon = self[i] + self[i + 1] + self[i + 2]
+            codons.append(codon)
+        return (codons)
+
+    @property
+    def codonFreq(self):
+        count = 0
+        the_codons = codonUsage.codons(self)
+        the_codon ={}
+        codon_list = ['AAT','AAG','ATA','ATT','ATG','AGA','AGT','AGG','TAA','TAT','TAG','TTA','TTT','TTG','TGA','TGT','TGG','GAA','GAT','GAG','GTA','GTT','GTG','GGA','GGT','GGG']
+        count = 0
+        for codon in codon_list:
+            if(codon in the_codons):
+                count = count + 1
+            else:
+                count = 0
+            pair = (codon, count)
+            return (pair)
+
+
+
 # This is the dummy code and data #
 
 an_accession_code = '1234'
@@ -159,5 +189,8 @@ a_try = summaryUsingAccessionCode(an_accession_code)
 a_try2 = summaryUsingProteinProduct(protein_name)
 a_try3 = summaryUsingChromosomalLoc(chromosomal_loc)
 a_try4 = summaryUsingGenBankIdentifier(genBank_id)
-print(a_try4)
 
+
+codon_arraye=codonUsage.codons(DNA_seq)
+codon_usage = codonUsage.codonFreq(DNA_seq)
+print(codon_usage)
