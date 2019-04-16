@@ -149,7 +149,10 @@ class codonUsage:
         self.dna_seq=dna_seq
 
     def codons(self):
-        codons=[self[i:i+3] for i in range(0, len(self), 3)]
+        codons = [self[i:i + 3] for i in range(0, len(self), 3)]
+        for i in range(0, len(codons)):
+            if len(codons[i]) < 3:
+                del codons[i]
         return(codons)
 
     def codonFreq(self):
@@ -165,7 +168,7 @@ class codonUsage:
 
 an_accession_code = '1234'
 protein_name = 'protein1'
-DNA_seq = 'ATATATGATGCa'
+DNA_seq = 'ATATATGTGC'
 aminoacid_sequence = 'this is an amino acid sequence '
 CDS = 'coding se'
 codon_usage = ' this is a codon sequenc'
@@ -182,4 +185,6 @@ a_try4 = summaryUsingGenBankIdentifier(genBank_id)
 
 codon_arraye=codonUsage.codons(DNA_seq)
 codon_usage = codonUsage.codonFreq(DNA_seq)
+codons = codonUsage.codons(DNA_seq)
 print(codon_usage)
+print(codons)
