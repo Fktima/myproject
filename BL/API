@@ -88,7 +88,7 @@ class Display:
 
         summary = {
             "dna_seq": Display.displayDNASeq(query),
-            "a_Seq": Display.displayAASeq(query),
+            "aa_seq": Display.displayAASeq(query),
             "coding_seq": Display.displayCodingSeq(query),
             "codon_usage": Display.displayCodonUsage(query),
             "restriction_site_EcorI" : Display.displayRestrictionSiteEcorI(query),
@@ -142,11 +142,33 @@ def summaryUsingGenBankIdentifier(genBank_id):
     return a_summary
 
 
+class codonUsage:
+    """ workouts the codon usage and displays is as dictionary
+    which will be further converted into a table"""
+    def __init(self, dna_seq):
+        self.dna_seq=dna_seq
+
+    def codons(self):
+        codons = [self[i:i + 3] for i in range(0, len(self), 3)]
+        for i in range(0, len(codons)):
+            if len(codons[i]) < 3:
+                del codons[i]
+        return(codons)
+
+    def codonFreq(self):
+        the_codons = codonUsage.codons(self)
+        codon_freq={}
+        for codon in the_codons:
+            codon_freq[codon]=the_codons.count(codon)
+        return(codon_freq)
+
+
+
 # This is the dummy code and data #
 
 an_accession_code = '1234'
 protein_name = 'protein1'
-DNA_seq = 'ATATAT'
+DNA_seq = 'ATATATGTGC'
 aminoacid_sequence = 'this is an amino acid sequence '
 CDS = 'coding se'
 codon_usage = ' this is a codon sequenc'
@@ -159,5 +181,10 @@ a_try = summaryUsingAccessionCode(an_accession_code)
 a_try2 = summaryUsingProteinProduct(protein_name)
 a_try3 = summaryUsingChromosomalLoc(chromosomal_loc)
 a_try4 = summaryUsingGenBankIdentifier(genBank_id)
-print(a_try4)
 
+
+codon_arraye=codonUsage.codons(DNA_seq)
+codon_usage = codonUsage.codonFreq(DNA_seq)
+codons = codonUsage.codons(DNA_seq)
+print(codon_usage)
+print(codons)
