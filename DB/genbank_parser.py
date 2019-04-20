@@ -7,30 +7,34 @@ class genbank_parser:
         self.openfile = open(filename, 'r')
 
     def parse_origin(self):
+        line = ''
+        line_origin = ''
         sequence = ''
-        file = self.openfile.readline()
-        for line in file:
-            if 'ORIGIN' in line:
-                while match('^\d+.*'):
-                    splitted = split('\s+', line)
-                    del splitted[0]
-                    sequence += ''.join(splitted).upper()
-                    break
-                    
+
+        while not line.startswith('ORIGIN'):
+            line = self.openfile.readline().strip()
+    
+        line_origin = self.openfile.readline().strip()
+        while match('^\d+.*', line_origin):
+            splitted = split('\s+', line_origin)
+            del splitted[0]
+            sequence += ''.join(splitted).upper()
+            line_origin = self.openfile.readline().strip()
+                        
         return sequence
 
-
     def parse_accession(self):
-        accession = []
-        pattern = re.compile('ACCESSION')
-        file = self.openfile.readline()
-        for line in file:
-            if pattern.match(line):
-                accession += line.strip
+        line = ''
+        while not line.startswith('ACCESSION'):
+            line = self.openfile.readline().strip()
+            
+        return line
 
-        return accession
+    
 
 
+    def close(self):
+        self.openfile.close()
         
         
 
