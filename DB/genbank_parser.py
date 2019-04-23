@@ -10,6 +10,7 @@ class genbank_parser:
         line = ''
         while not line.startswith(keyword):
             line = self.openfile.readline().strip()
+        line = line[len(keyword):].strip()
         return line
 
     def parse_accession(self):
@@ -19,19 +20,14 @@ class genbank_parser:
 
     def parse_features(self):
         line = self.get_keyword('FEATURES')
-            
         features = []
-        line = self.openfile.readline()
-        while not 'CDS' in line:
-            line = self.openfile.readline()
-        else:
-            name, location = split('\s+', line.strip())
-            features.append(name)
 
-        return features
+        return None
+    
 
     def parse_origin(self):
         sequence = ''
+        sequences = []
         line = self.get_keyword('ORIGIN')
         line = self.openfile.readline().strip()
 
@@ -40,10 +36,20 @@ class genbank_parser:
             del splitted[0]
             sequence += ''.join(splitted).upper()
             line = self.openfile.readline().strip()
-                        
-        return sequence
 
-    
+        sequences.append(sequence)
+            
+        return sequences
+
+    def file_position(self):
+        current_position = self.openfile.tell()
+        return current_position
+
+    def location_parser(self, location_string):
+
+        return None
+        
+
     def close(self):
         self.openfile.close()
         
