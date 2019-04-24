@@ -1,4 +1,5 @@
 #!/usr/bin/python3
+
 """
 ------------------------------------------------------------------------------------------------------------------------
 This is the business logic API
@@ -6,77 +7,79 @@ version: 1.0
 Author: Miruna Serian
 ------------------------------------------------------------------------------------------------------------------------
 """
+import dummy as DB
+
 class Search:
     """ Class that retrieves the query given by the user
     either as an AccessionCode, protein product name, Chromosomal location
     or GenBank identifier
     """
 
-    def byAccessionCode(accession_code):
+    def by_accession_code(accession_code):
         return accession_code
 
-    def byProteinProduct(protein_name):
+    def by_protein_product(protein_name):
         return protein_name
 
-    def byChromosomalLoc(chromosomal_loc):
+    def by_chromosomal_loc(chromosomal_loc):
         return chromosomal_loc
 
-    def byGenBankIdentifier(genBank_id):
+    def by_genbank_identifier(genBank_id):
         return genBank_id
 
 
 class Display:
 
-    def displayDNASeq(query):
+    def display_dna_seq(query):
         """ displays DNA seq associated with the query"""
-        return (DNA_seq)
+        return DB.DNA_seq
 
-    def displayAASeq(query):
+    def display_aminoacid_seq(query):
         """ d
         isplays the amino acid sequence
         parameters: query, type string
         returns the amino acid sequence"""
-        return aminoacid_sequence
+        return DB.aminoacid_sequence
 
-    def displayCodingSeq(query):
+    def display_coding_seq(query):
         """
         displays the coding region
         Parameters: query, type string
         Ouput: CDS
         """
-        return CDS
+        return DB.CDS
 
-    def displayCodonUsage(query):
+    def display_codon_usage(query):
         """
         displays the codon Usage
         parameters: query, type string
         output: frequencies, type dictionary
         """
-        return codon_usage
+        return DB.codon_usage
 
-    def displayRestrictionSiteEcorI(query):
+    def display_restriction_site_EcorI(query):
         """
         displays the sticky-end restriction enzyme sites for EcorI
         :return: restr_Site_EcorI
         type: string
         """
-        return restr_site_EcorI
+        return DB.restr_site_EcorI
 
-    def displayRestrictionSiteBamHI(query):
+    def display_restriction_site_BamHI(query):
         """
         displays the sticky-end restriction enzyme sites for  BamHI
         :return: restr_Site_BamHI
         type: string
         """
-        return restr_site_BamHI
+        return DB.restr_site_BamHI
 
-    def displayRestrictionSiteBsuMI(query):
+    def display_restriction_site_BsuMI(query):
         """
         displays the sticky-end restriction enzyme sites for BsumI
         # :return: restr_Site_BsumI
         type: string
         """
-        return restr_site_BsuMI
+        return DB.restr_site_BsuMI
 
     def summary(query):
         """
@@ -87,57 +90,57 @@ class Display:
         """
 
         summary = {
-            "dna_seq": Display.displayDNASeq(query),
-            "aa_seq": Display.displayAASeq(query),
-            "coding_seq": Display.displayCodingSeq(query),
-            "codon_usage": Display.displayCodonUsage(query),
-            "restriction_site_EcorI" : Display.displayRestrictionSiteEcorI(query),
-            "restriction_site_BamHI": Display.displayRestrictionSiteBamHI(query),
-            "restriction_site_BsuMI": Display.displayRestrictionSiteBsuMI(query)
+            "dna_seq": Display.display_dna_seq(query),
+            "aa_seq": Display.display_aminoacid_seq(query),
+            "coding_seq": Display.display_coding_seq(query),
+            "codon_usage": Display.display_codon_usage(query),
+            "restriction_site_EcorI" : Display.display_restriction_site_EcorI(query),
+            "restriction_site_BamHI": Display.display_restriction_site_BamHI(query),
+            "restriction_site_BsuMI": Display.display_restriction_site_BsuMI(query)
         }
         return summary
 
 
-def summaryUsingAccessionCode(accession_code):
+def summary_using_accession_code(accession_code):
     """
     Dislays the summary associated with the accession code provided.
     Parameters: accession code
     Output: a_summary, type dictionary
     """
-    a_query = Search.byAccessionCode(accession_code)
+    a_query = Search.by_accession_code(accession_code)
     a_summary = Display.summary(a_query)
     return a_summary
 
 
-def summaryUsingProteinProduct(protein_name):
+def summary_using_protein_product(protein_name):
     """
     Dislays the summary associated with the protein name provided.
     Parameters: protein_name
     Output: a_summary, type dictionary
     """
-    a_query = Search.byProteinProduct(protein_name)
+    a_query = Search.by_protein_product(protein_name)
     a_summary = Display.summary(a_query)
     return a_summary
 
 
-def summaryUsingChromosomalLoc(chromosomal_loc):
+def summary_using_chromosomal_loc(chromosomal_loc):
     """
     Dislays the summary associated with the chromosomal location provided.
     Parameters: chromosomal_loc
     Output: a_summary, type dictionary
     """
-    a_query = Search.byChromosomalLoc(chromosomal_loc)
+    a_query = Search.by_chromosomal_loc(chromosomal_loc)
     a_summary = Display.summary(a_query)
     return a_summary
 
 
-def summaryUsingGenBankIdentifier(genBank_id):
+def summary_using_genbank_identifier(genBank_id):
     """
     Dislays the summary associated with the GenBank ID provided.
     Parameters: genBank_id
     Output: a_summary, type dictionary
     """
-    a_query = Search.byGenBankIdentifier(genBank_id)
+    a_query = Search.by_genbank_identifier(genBank_id)
     a_summary = Display.summary(a_query)
     return a_summary
 
@@ -155,36 +158,21 @@ class codonUsage:
                 del codons[i]
         return(codons)
 
-    def codonFreq(self):
+    def codon_frequency(self):
         the_codons = codonUsage.codons(self)
         codon_freq={}
         for codon in the_codons:
             codon_freq[codon]=the_codons.count(codon)
         return(codon_freq)
 
+a_try = summary_using_accession_code(DB.an_accession_code)
+a_try2 = summary_using_protein_product(DB.protein_name)
+a_try3 = summary_using_chromosomal_loc(DB.chromosomal_loc)
+a_try4 = summary_using_genbank_identifier(DB.genBank_id)
 
 
-# This is the dummy code and data #
-
-an_accession_code = '1234'
-protein_name = 'protein1'
-DNA_seq = 'ATATATGTGC'
-aminoacid_sequence = 'this is an amino acid sequence '
-CDS = 'coding se'
-codon_usage = ' this is a codon sequenc'
-chromosomal_loc = '18iq'
-genBank_id = '678'
-restr_site_EcorI = 'restriction site EcorI'
-restr_site_BamHI = 'restriction site BamHI'
-restr_site_BsuMI = 'restriction site BsuMI'
-a_try = summaryUsingAccessionCode(an_accession_code)
-a_try2 = summaryUsingProteinProduct(protein_name)
-a_try3 = summaryUsingChromosomalLoc(chromosomal_loc)
-a_try4 = summaryUsingGenBankIdentifier(genBank_id)
-
-
-codon_arraye=codonUsage.codons(DNA_seq)
-codon_usage = codonUsage.codonFreq(DNA_seq)
-codons = codonUsage.codons(DNA_seq)
+codon_array=codonUsage.codons(DB.DNA_seq)
+codon_usage = codonUsage.codon_frequency(DB.DNA_seq)
+codons = codonUsage.codons(DB.DNA_seq)
 print(codon_usage)
-print(codons)
+
