@@ -48,7 +48,9 @@ def get_coding_seq(query):
     Parameters: query, type string
     Ouput: CDS
     """
-    return DB.get_gene_entry(query)['CDS']
+    coord =DB.get_gene_entry(query)['CDS']
+    coding_seq = get_dna_seq(query)[coord[0]-1:coord[1]-1]
+    return coding_seq
 
 def get_codon_usage(query):
     """
@@ -105,7 +107,7 @@ class codonUsage:
             codon_freq[codon]=the_codons.count(codon)
         return(codon_freq)
 
-a_try=get_codon_usage('678')
+a_try=get_coding_seq('678')
 print(a_try)
 
 
