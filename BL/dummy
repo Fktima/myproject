@@ -1,0 +1,14 @@
+# This is the dummy code and data #
+
+
+an_accession_code = '1234'
+protein_name = 'protein1'
+DNA_seq = 'ATATATGTGC'
+aminoacid_sequence = 'this is an amino acid sequence '
+CDS = 'coding se'
+codon_usage = ' this is a codon sequenc'
+chromosomal_loc = '18iq'
+genBank_id = '678'
+restr_site_EcorI = 'restriction site EcorI'
+restr_site_BamHI = 'restriction site BamHI'
+restr_site_BsuMI = 'restriction site BsuMI'
