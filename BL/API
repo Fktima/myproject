@@ -96,11 +96,25 @@ def find_restriction_sites(query):
     }
     return cutting_positions_dict
 
-"""
-------------------------------------------------------------------------------------------------------------------------
-This section deals with codons and codon usage
-------------------------------------------------------------------------------------------------------------------------
-"""
+
+def check_which_enzyme_cuts(query):
+    check_ecorI = False
+    check_BamHI = False
+    check_BsuMI = False
+    if len(find_restriction_sites(query)['ecorI'])>0 :
+        check_ecorI = True
+    if len(find_restriction_sites(query)['BamHI'])>0:
+        check_BamHI = True
+    if len(find_restriction_sites(query)['BsuMI'])>0:
+        check_BsuMI = True
+    check_which_enzyme_dict ={
+        "ecorI": check_ecorI,
+        "BamHI": check_BamHI,
+        "BsuMI": check_BsuMI
+    }
+    return check_which_enzyme_dict
+
+
 
 
 class codonUsage:
@@ -123,5 +137,7 @@ class codonUsage:
             codon_freq[codon]=the_codons.count(codon)
         return(codon_freq)
 
-a_try=find_restriction_sites('678')
-print(a_try)
+a_try1=check_which_enzyme_cuts('678')
+a_try2=find_restriction_sites('678')
+print(a_try1)
+print(a_try2)
