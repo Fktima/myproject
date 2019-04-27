@@ -66,12 +66,14 @@ This section deals with restriction enzymes
 ------------------------------------------------------------------------------------------------------------------------
 """
 
-"""recognition_sites_5prime_end={
+"""recognition_sites_5prime={
     "EcorI": "GAATTC",
     "BamHI": "GGATCC",
     "BsuMI": "CTCGAG"
 }
 """
+def find_restr_sites(query):
+    cutting_sites= {}
 def find_restriction_sites(query):
     """ this function determines the cutting sites for the enzymes. To be used by front end.
     Output: a dictionary of arrays of where the enzymes cut.
@@ -117,27 +119,31 @@ def check_which_enzyme_cuts(query):
 
 
 
-class codonUsage:
+
     """ workouts the codon usage and displays is as dictionary
     which will be further converted into a table"""
-    def __init(self, dna_seq):
-        self.dna_seq=dna
 
-    def codons(self):
-        codons = [self[i:i + 3] for i in range(0, len(self), 3)]
-        for i in range(0, len(codons)):
-            if len(codons[i]) < 3:
-                del codons[i]
-        return(codons)
 
-    def codon_frequency(self):
-        the_codons = codonUsage.codons(self)
-        codon_freq={}
-        for codon in the_codons:
-            codon_freq[codon]=the_codons.count(codon)
-        return(codon_freq)
+def get_codons(query):
+    dna_seq = get_dna_seq(query)
+    codons = [dna_seq[i:i + 3] for i in range(0, len(dna_seq), 3)]
+    for i in range(0, len(codons)):
+        if len(codons[i]) < 3:
+            del codons[i]
+    return(codons)
 
+def codon_frequency(query):
+    the_codons = get_codons(query)
+    codon_freq={}
+    for codon in the_codons:
+        codon_freq[codon]=the_codons.count(codon)
+    return(codon_freq)
+
+a_try=get_dna_seq('678')
 a_try1=check_which_enzyme_cuts('678')
 a_try2=find_restriction_sites('678')
+a_try3=codon_frequency('678')
+print(a_try)
 print(a_try1)
 print(a_try2)
+print(a_try3)
