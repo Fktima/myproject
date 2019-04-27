@@ -1,0 +1,28 @@
+
+
+restr_site_EcorI = 'restriction site EcorI'
+restr_site_BamHI = 'restriction site BamHI'
+restr_site_BsuMI = 'restriction site BsuMI'
+
+def get_gene_entry(query):
+
+    if (query in query_search):
+        return gene_entry
+
+gene_entry ={
+    "accession_code":  '1234',
+    "protein_name": 'protein1',
+    "DNA_seq": 'GTGAATTCATATGGAATTCTGC',
+    "aminoacid_sequence":'this is an amino acid sequence ',
+    "CDS": 'coding se',
+    "codon_usage": ' this is a codon sequenc',
+    "chromosomal_loc": '18iq',
+    "genBank_id": '678'
+}
+
+
+query_search=[]
+query_search.append(gene_entry['protein_name'])
+query_search.append(gene_entry['accession_code'])
+query_search.append(gene_entry['genBank_id'])
+
