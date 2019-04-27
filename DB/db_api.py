@@ -9,78 +9,166 @@ class DatabaseLayer(object):
                                      user=config.MyDB['user'],
                                      password=config.MyDB['password'],
                                      db=config.MyDB['dbname'])
-        self.cur = self.cxn.cursor()
+        self.cur = self.cxn.cursor(dictionary=True)
 
-    def get_accession_code(self, query):
+    def get_accession_code(self, query, return_cds=True, return_dna=True, return_attribute=True):
+
         ''' Retrieves all rows that match the given accession code
 
 
         Parameters:
-        query (str): GenBank accession code
+            query (str): Accession Code
 
+            return_cds (boolean): Default: True
+            When set to "True" returns string showing the coding sequence loation
 
-        Returns:
-        gene_entry: Returning dictionary of results
+            return_dna (boolean): Default: True
+            When set to "True" returns string showing the DNA sequence
 
+            return_attributes (boolean): Default: True
+            When set to "True" returns a list giving attributes for the a
+            coding sequence
+        
+        Return:
+        gene_entry: list containing information related to the query based on which
+        boolean parameters are set to true.
 
         '''
+        gene_entry = []
+        
+        if return_attribute:
+            attribute = self.cur.execute("SELECT * from attributes WHERE accession_code = '%s' " %(query))
+            attribute = self.cur.fetchall()
+            gene_entry.append(attribute)
+        if return_cds:
+            cds = self.cur.execute("SELECT cds from seq WHERE accession_code = '%s' " %(query))
+            cds = self.cur.fetchall()
+            gene_entry.append(cds)
+        if return_seq:
+            seq = self.cur.execute("SELECT dna_seq from seq WHERE accession_code = '%s' " %(query))
+            seq = self.cur.fetchall()
+            gene_entry.append(seq)
 
-        gene_entry = self.cur.execute("SELECT * from genbank WHERE accession_code = '%s' " %(query))
-        gene_entry = self.cur.fetchall()
         return gene_entry
+        
+    def get_chromosomal_loc(self, query, return_cds=True, return_dna=True, return_attribute=True):
 
-    def get_chromosomal_loc(self, query):
         ''' Retrieves all rows that match the given chromosomal location
 
 
         Parameters:
-        query (str): Chromosmal location
+            query (str): Chromosomal Location
 
+            return_cds (boolean): Default: True
+            When set to "True" returns string showing the coding sequence loation
 
-        Returns:
-        gene_entry: Returning dictionary of results
+            return_dna (boolean): Default: True
+            When set to "True" returns string showing the DNA sequence
 
+            return_attributes (boolean): Default: True
+            When set to "True" returns a list giving attributes for the a
+            coding sequence
+        
+        Return:
+        gene_entry: list containing information related to the query based on which
+        boolean parameters are set to true.
 
         '''
+        gene_entry = []
+        
+        if return_attribute:
+            attribute = self.cur.execute("SELECT * from attributes WHERE chromosomal_loc = '%s' " %(query))
+            attribute = self.cur.fetchall()
+            gene_entry.append(attribute)
+        if return_cds:
+            cds = self.cur.execute("SELECT cds from seq s, atribute a WHERE s.accession_code = a.accession_code AND chromosomal_loc = '%s' " %(query))
+            cds = self.cur.fetchall()
+            gene_entry.append(cds)
+        if return_seq:
+            seq = self.cur.execute("SELECT dna_seq from seq s, atribute a WHERE s.accession_code = a.accession_code AND chromosomal_loc = '%s' " %(query))
+            seq = self.cur.fetchall()
+            gene_entry.append(seq)
 
-        gene_entry = self.cur.execute("SELECT * from genbank WHERE chromosomal_loc = '%s' " %(query))
-        gene_entry = self.cur.fetchall()
         return gene_entry
 
-    def get_gene_id(self, query):
+    def get_gene_id(self, query, return_cds=True, return_dna=True, return_attribute=True):
         ''' Retrieves all rows that match the given gene identifier
 
 
         Parameters:
-        query (str): Gene identifier
+            query (str): Gene Identifier
 
+            return_cds (boolean): Default: True
+            When set to "True" returns string showing the coding sequence loation
 
-        Returns:
-        gene_entry: Returning dictionary of results
+            return_dna (boolean): Default: True
+            When set to "True" returns string showing the DNA sequence
+
+            return_attributes (boolean): Default: True
+            When set to "True" returns a list giving attributes for the a
+            coding sequence
+        
+        Return:
+        gene_entry: list containing information related to the query based on which
+        boolean parameters are set to true.
 
 
         '''
+        gene_entry = []
+        
+        if return_attribute:
+            attribute = self.cur.execute("SELECT * from attributes WHERE gene_id = '%s' " %(query))
+            attribute = self.cur.fetchall()
+            gene_entry.append(attribute)
+        if return_cds:
+            cds = self.cur.execute("SELECT cds from seq s, atribute a WHERE s.accession_code = a.accession_code AND gene_id = '%s' " %(query))
+            cds = self.cur.fetchall()
+            gene_entry.append(cds)
+        if return_seq:
+            seq = self.cur.execute("SELECT dna_seq from seq s, atribute a WHERE s.accession_code = a.accession_code AND gene_id = '%s' " %(query))
+            seq = self.cur.fetchall()
+            gene_entry.append(seq)
 
-        gene_entry = self.cur.execute("SELECT * from genbank WHERE genBank_id = '%s' " %(query))
-        gene_entry = self.cur.fetchall()
         return gene_entry
 
-    def get_protein_product(self, query):
+    def get_protein_product(self, query, return_cds=True, return_dna=True, return_attribute=True):
         ''' Retrieves all rows that match the given protein product
 
 
         Parameters:
-        query (str): protein product
+            query (str): Protein product
 
+            return_cds (boolean): Default: True
+            When set to "True" returns string showing the coding sequence loation
 
-        Returns:
-        gene_entry: Returning dictionary of results
+            return_dna (boolean): Default: True
+            When set to "True" returns string showing the DNA sequence
+
+            return_attributes (boolean): Default: True
+            When set to "True" returns a list giving attributes for the a
+            coding sequence
+        
+        Return:
+        gene_entry: list containing information related to the query based on which
+        boolean parameters are set to true.
 
 
         '''
+        gene_entry = []
+        
+        if return_attribute:
+            attribute = self.cur.execute("SELECT * from attributes WHERE protein_product = '%s' " %(query))
+            attribute = self.cur.fetchall()
+            gene_entry.append(attribute)
+        if return_cds:
+            cds = self.cur.execute("SELECT cds from seq s, atribute a WHERE s.accession_code = a.accession_code AND protein_product = '%s' " %(query))
+            cds = self.cur.fetchall()
+            gene_entry.append(cds)
+        if return_seq:
+            seq = self.cur.execute("SELECT dna_seq from seq s, atribute a WHERE s.accession_code = a.accession_code AND protein_product = '%s' " %(query))
+            seq = self.cur.fetchall()
+            gene_entry.append(seq)
 
-        gene_entry = self.cur.execute("SELECT * from genbank WHERE protein_product = '%s' " %(query))
-        gene_entry = self.cur.fetchall()
         return gene_entry
     
     def __del__(self):
