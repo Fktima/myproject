@@ -50,7 +50,7 @@ def get_coding_seq(query):
     Ouput: CDS
     """
     coord =DB.get_gene_entry(query)['CDS']
-    coding_seq = get_dna_seq(query)[coord[0]-1:coord[1]-1]
+    coding_seq = get_dna_seq(query)[coord[0]-1:coord[1]]
     return coding_seq
 
 def get_codon_usage(query):
@@ -62,7 +62,7 @@ def get_codon_usage(query):
     return codonUsage.codon_frequency(get_dna_seq(query))
 """
 ------------------------------------------------------------------------------------------------------------------------
-This section deals with restriction enzymes
+Restriction enzymes
 ------------------------------------------------------------------------------------------------------------------------
 """
 
@@ -117,32 +117,71 @@ def check_which_enzyme_cuts(query):
     return check_which_enzyme_dict
 
 
+"""
+------------------------------------------------------------------------------------------------------------------------
+Coding sequence and DNA to protein
+------------------------------------------------------------------------------------------------------------------------
+"""
 
 
 
-    """ workouts the codon usage and displays is as dictionary
-    which will be further converted into a table"""
-
+table = {
+    'ATA':'I', 'ATC':'I', 'ATT':'I', 'ATG':'M',
+    'ACA':'T', 'ACC':'T', 'ACG':'T', 'ACT':'T',
+    'AAC':'N', 'AAT':'N', 'AAA':'K', 'AAG':'K',
+    'AGC':'S', 'AGT':'S', 'AGA':'R', 'AGG':'R',
+    'CTA':'L', 'CTC':'L', 'CTG':'L', 'CTT':'L',
+    'CCA':'P', 'CCC':'P', 'CCG':'P', 'CCT':'P',
+    'CAC':'H', 'CAT':'H', 'CAA':'Q', 'CAG':'Q',
+    'CGA':'R', 'CGC':'R', 'CGG':'R', 'CGT':'R',
+    'GTA':'V', 'GTC':'V', 'GTG':'V', 'GTT':'V',
+    'GCA':'A', 'GCC':'A', 'GCG':'A', 'GCT':'A',
+    'GAC':'D', 'GAT':'D', 'GAA':'E', 'GAG':'E',
+    'GGA':'G', 'GGC':'G', 'GGG':'G', 'GGT':'G',
+    'TCA':'S', 'TCC':'S', 'TCG':'S', 'TCT':'S',
+    'TTC':'F', 'TTT':'F', 'TTA':'L', 'TTG':'L',
+    'TAC':'Y', 'TAT':'Y', '':'_', 'TAG':'_',
+    'TGC':'C', 'TGT':'C', 'TGA':'_', 'TGG':'W',
+}
 
 def get_codons(query):
     dna_seq = get_dna_seq(query)
     codons = [dna_seq[i:i + 3] for i in range(0, len(dna_seq), 3)]
     for i in range(0, len(codons)):
-        if len(codons[i]) < 3:
+        if len(codons[i])%3!=0:
             del codons[i]
     return(codons)
 
+def DNA_to_protein(query):
+    """
+    converts DNA sequence obtained from GenBank to amino acid  sequence.
+    :param query:
+    :return: protein_seq, type strings
+    """
+    protein_seq= " "
+    codons=get_codons(query)
+    for codon in codons:
+        protein_seq += table[codon]
+    return(protein_seq)
+
+
+
 def codon_frequency(query):
+    """
+    displays codon frequency as percentages rounded to 2 decimals
+    :param query:
+    :return: codon frequency
+    """
     the_codons = get_codons(query)
     codon_freq={}
     for codon in the_codons:
-        codon_freq[codon]=the_codons.count(codon)
+        codon_freq[codon]=round(the_codons.count(codon)/len(the_codons)*100, 2)
     return(codon_freq)
 
 a_try=get_dna_seq('678')
-a_try1=check_which_enzyme_cuts('678')
-a_try2=find_restriction_sites('678')
-a_try3=codon_frequency('678')
+a_try1=DNA_to_protein('678')
+a_try2=codon_frequency('678')
+a_try3=get_codons('678')
 print(a_try)
 print(a_try1)
 print(a_try2)
