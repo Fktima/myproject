@@ -1,43 +1,112 @@
 <html>
 
 <head>
+
+<style type = "text/css">
+<!-- body { background-color: #D7B8D9; }
+.heading { font: bold 60pt Avantgarde, TeX Gyre Adventor, URW Gothic L, sans-serif;
+           -webkit-animation:colorchange 20s infinite alternate; }
+@-webkit-keyframes colorchange {
+      0% { color: black; }
+      10% { color: #8e44ad; }
+      20% { color: #1abc9c; }
+      30% { color: #d35400; }
+      40% { color: blue; }
+      50% { color: #34495e; }
+      60% { color: blue; }
+      70% { color: #2980b9; }
+      80% { color: #f1c40f; }
+      90% { color: #2980b9; }
+      100% { color: pink; }
+      }
+.about { font: 15pt Arial, sans-serif; }
+.center { display: block;
+          margin-left: auto;
+          margin-right: auto;
+          width: 30%;
+         }
+.box { font: 15pt Arial, sans-serif;
+       margin-bottom: 4px;
+     }
+textarea { border: 1px solid #888; }
+.searching { font: 15pt Arial, sans-serif;
+             margin-bottom: 4px;
+           }
+.choices { font-size: 14pt; }
+.contact_heading { border: 2px solid;
+                   border-radius: 5px;
+                   margin-top: 30px;
+                 }
+h4 { font: bold 15pt Arial, sans-serif;
+     margin-top: 0px;
+     margin-bottom: 3px;
+         }
+.details { font: 15pt Arial, sans-serif;
+           margin-top: 4px;
+         }
+.name { font-size: 12pt;
+        margin-bottom: 0px;
+       }
+.email { font-size: 12pt;
+         margin-bottom: 0px
+       }
+.button { background-color: #660099;
+	color: white;
+	font-family: "trebuchet ms", Arial, sans-serif;
+	border: 1px solid black;
+	font-style: italic;
+        }
+
+
+-->
+</style>
 <title> All About Chromosome 21 </title>
+
 </head>
 
 <body>
 
 <form method = "post" action = "/cgi-bin/cgiwrap/kf001/projectcgi.py">
 
-<h1> Please sumbit your queries in the box below: </h1>
+<h1 align = "center" class = "heading" > Chromosome 21 </h1>
+<p class = "about"> Enter your query to find out related information about chromosome 21. This website will tell you all the information regarding different genes, protein product names, restriction enzymes and all you need to know about Chromosme 21. </br>
+<b><u><i> Try this out! </i></u></b> and see the results behind your request. </p>
+
+<img src = "http://119.46.166.126/self_all/selfaccess9/m3/701/more_lesson6/image_lesson6/p8.png" class = "center"/>
+
+<h2 class = "box" > Please sumbit your queries in the box below: </h2>
 <textarea name = "seqs" row ="20" col = "80"></textarea>
 
-<h2> Please select the type of your input data: </h2>
+<h3 class = "searching"> Please select the type of your input data: </h3>
 
-<div>
-<input type = "radio" name = "searchtype" value = "bar1"> Gene ID </input><br/>
-<input type = "radio" name = "searchtype" value = "bar2"> Protein Product Names </input><br/>
-<input type = "radio" name = "searchtype" value = "bar3"> Chromosomal Location </input><br/>
-<input type = "radio" name = "searchtype" value = "bar4"> GenBank Accession Code </input><br/>
+<div class = "choices">
+<input type = "radio" name = "searchtype" value = "gene"> Gene ID </input><br/>
+<input type = "radio" name = "searchtype" value = "product"> Protein Product Names </input><br/>
+<input type = "radio" name = "searchtype" value = "source"> Chromosomal Location </input><br/>
+<input type = "radio" name = "searchtype" value = "ACCESSION"> GenBank Accession Code </input><br/>
 </div>
 
-<h3> Please enter your details </h3>
-<p> Enter your name and Email-Addresss for anytime access to your search summary </p>
+<div class = "contact_heading">
+<h4> Please enter your details </h4>
+<p class = "details"> Enter your name and Email-Addresss for anytime access to your search summary </p>
 
 <div>
-<p> Full Name: </p>
+<p class = "name"> Full Name: </p>
 <input name = "name" type = "text" maxlength = "y"/>
-<p> Email Address: </p>
+<p class = "email"> Email Address: </p>
 <input name = "email" type = "text" />
+</div>
 </div>
 
 <p>
-<dive>
-<input type = "Submit" />
-<input type = "Reset" />
+<div>
+<input type = "Submit" class = "button" />
+<input type = "Reset" class = "button"/>
 </div>
 </p>
 
 </form>
+
 </body>
 
 
