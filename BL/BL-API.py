@@ -28,38 +28,62 @@ class Search:
         return DB.get_gene_entry()
 """
 ------------------------------------------------------------------------------------------------------------------------
-This is used by the front end to display information about the gene
+This is used by the front end to display information about the gene 
 ------------------------------------------------------------------------------------------------------------------------
 """
-
-
-def get_dna_seq(query):
-    """ displays DNA seq associated with the query"""
-    return DB.get_gene_entry(query)['DNA_seq']
-
-def get_aminoacid_seq(query):
-    """ displays the amino acid sequence
-     parameters: query, type string
-    returns the amino acid sequence"""
-    return DB.get_gene_entry(query)['aminoacid_sequence']
-
-def get_coding_seq(query):
+class SummaryList:
     """
-    displays the coding region
-    Parameters: query, type string
-    Ouput: CDS
+    Class containing functions to display the summary list of all gene identifiers,
+    protein product names, Genbank accession, chromosomal location. The front end
+    should diplay the lists and one could click to see the details the particular gene
     """
-    coord =DB.get_gene_entry(query)['CDS']
-    coding_seq = get_dna_seq(query)[coord[0]-1:coord[1]]
-    return coding_seq
+    def get_gene_identifiers_list():
+        gene_identifiers = DB.get_gene_list() #this ins not the actual name of the funcion from the DB API
+        return gene_identifiers
+    def get_protein_product_list():
+        protein_product_names=DB.get_protein_product_names() #this ins not the actual name of the funcion from the DB API
+        return protein_product_names
+    def get_genbank_accession_liest():
+        genbank_accession_list = DB.get_accessions() #this ins not the actual name of the funcion from the DB API
+        return genbank_accession_list
+    def get_chromosomal_loc_list():
+        chromosomal_locations = DB.get_chromosomal_locations() #this ins not the actual name of the funcion from the DB API
+        return chromosomal_locations
 
-def get_codon_usage(query):
+class Entry:
     """
-    displays the codon Usage
-    parameters: query, type string
-    output: frequencies, type dictionary
+    Class that displays information for a particular entry
     """
-    return codonUsage.codon_frequency(get_dna_seq(query))
+    def get_dna_seq(query):
+        """ displays DNA seq associated with the query"""
+        return DB.get_gene_entry(query)['DNA_seq']
+
+    def get_aminoacid_seq(query):
+        """ displays the amino acid sequence
+         parameters: query, type string
+        returns the amino acid sequence"""
+        return DB.get_gene_entry(query)['aminoacid_sequence']
+
+    def get_coding_seq(query):
+        """
+        displays the coding region
+        Parameters: query, type string
+        Ouput: CDS
+        """
+        coord =DB.get_gene_entry(query)['CDS']
+        coding_seq = get_dna_seq(query)[coord[0]-1:coord[1]]
+        return coding_seq
+
+    def get_codon_usage(query):
+        """
+        displays the codon Usage
+        parameters: query, type string
+        output: frequencies, type dictionary
+        """
+        return codon_frequency(query)
+
+
+
 """
 ------------------------------------------------------------------------------------------------------------------------
 Restriction enzymes
@@ -84,7 +108,7 @@ def find_restriction_sites(query):
     cutting_position_ecorI =[]
     cutting_position_BamHI =[]
     cutting_position_BsuMI =[]
-    dna_seq = get_dna_seq(query)
+    dna_seq = Entry.get_dna_seq(query)
     for a_match in  re_ecorI.finditer(dna_seq):
         cutting_position_ecorI.append(a_match.start()+1) #used +1 as enzyme cuts after first base in the recognition pattern
     for a_match in  re_BamHI.finditer(dna_seq):
@@ -145,7 +169,7 @@ table = {
 }
 
 def get_codons(query):
-    dna_seq = get_dna_seq(query)
+    dna_seq = Entry.get_dna_seq(query)
     codons = [dna_seq[i:i + 3] for i in range(0, len(dna_seq), 3)]
     for i in range(0, len(codons)):
         if len(codons[i])%3!=0:
@@ -178,11 +202,11 @@ def codon_frequency(query):
         codon_freq[codon]=round(the_codons.count(codon)/len(the_codons)*100, 2)
     return(codon_freq)
 
-a_try=get_dna_seq('678')
+
 a_try1=DNA_to_protein('678')
 a_try2=codon_frequency('678')
 a_try3=get_codons('678')
-print(a_try)
+
 print(a_try1)
 print(a_try2)
 print(a_try3)
