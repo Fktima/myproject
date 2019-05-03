@@ -7,7 +7,8 @@ Author: Miruna Serian
 ------------------------------------------------------------------------------------------------------------------------
 """
 import re
-import dummy as DB #using the dumy code instead of the DB api
+from collections import Counter
+import dummy as DB #using the dummy code instead of the DB api
 
 class Search:
     """ Class that retrieves the query given by the user
@@ -56,13 +57,13 @@ class Entry:
     """
     def get_dna_seq(query):
         """ displays DNA seq associated with the query"""
-        return DB.get_gene_entry(query)['DNA_seq']
+        return DB.get_gene_entry(query)["DNA_seq"]
 
     def get_aminoacid_seq(query):
         """ displays the amino acid sequence
          parameters: query, type string
         returns the amino acid sequence"""
-        return DB.get_gene_entry(query)['aminoacid_sequence']
+        return DB.get_gene_entry(query)["aminoacid_sequence"]
 
     def get_coding_seq(query):
         """
@@ -70,8 +71,9 @@ class Entry:
         Parameters: query, type string
         Ouput: CDS
         """
+
         coord =DB.get_gene_entry(query)['CDS']
-        coding_seq = get_dna_seq(query)[coord[0]-1:coord[1]]
+        coding_seq = Entry.get_dna_seq(query)[coord[0]-1:coord[1]]
         return coding_seq
 
     def get_codon_usage(query):
@@ -164,11 +166,16 @@ table = {
     'GGA':'G', 'GGC':'G', 'GGG':'G', 'GGT':'G',
     'TCA':'S', 'TCC':'S', 'TCG':'S', 'TCT':'S',
     'TTC':'F', 'TTT':'F', 'TTA':'L', 'TTG':'L',
-    'TAC':'Y', 'TAT':'Y', '':'_', 'TAG':'_',
-    'TGC':'C', 'TGT':'C', 'TGA':'_', 'TGG':'W',
+    'TAC':'Y', 'TAT':'Y', 'TAG':'',
+    'TGC':'C', 'TGT':'C', 'TGA':'', 'TGG':'W',
 }
 
 def get_codons(query):
+    """
+    Determines the codons only in the coding sequence
+    :param query:
+    :return: codons
+    """
     dna_seq = Entry.get_dna_seq(query)
     codons = [dna_seq[i:i + 3] for i in range(0, len(dna_seq), 3)]
     for i in range(0, len(codons)):
@@ -186,9 +193,15 @@ def DNA_to_protein(query):
     codons=get_codons(query)
     for codon in codons:
         protein_seq += table[codon]
-    return(protein_seq)
+    the_protein_seq = protein_seq.replace(" ","")
+    return(the_protein_seq)
 
-
+def codon_count(query):
+    the_codons = get_codons(query)
+    codon_count={}
+    for codon in the_codons:
+        codon_count[codon]=the_codons.count(codon)
+    return codon_count
 
 def codon_frequency(query):
     """
@@ -203,10 +216,44 @@ def codon_frequency(query):
     return(codon_freq)
 
 
+def check_alignment(query):
+    """
+    Checks if the amino acid sequence obtained from Genbank is correctly aligned to the DNA sequence"
+    :param query:
+    :return: true of fals
+    """
+    aa_Seq_genbank = Entry.get_aminoacid_seq(query)
+    aa_transformed = DNA_to_protein(query)
+    if aa_Seq_genbank == aa_transformed:
+        return True
+    else:
+        return False
+def return_aligned_aa_seq(query):
+    if check_alignment(query) is True:
+        aligned_aa_seq = Entry.get_aminoacid_seq(query)
+    else:
+        aligned_aa_seq = DNA_to_protein(query)
+    return aligned_aa_seq
+
+def codon_usage_for_table():
+    all_entries =DB.gene_entry
+    all_codon_count_dict={}
+    for entry in all_entries:
+        a_codon_usage  = codon_frequency(entry)
+        all_codon_count_dict.add(a_codon_usage)
+
+    return all_codon_count_dict
+
+
+
+
 a_try1=DNA_to_protein('678')
-a_try2=codon_frequency('678')
+a_try2=Entry.get_coding_seq('678')
 a_try3=get_codons('678')
+a_try4=codon_usage_for_table()
 
 print(a_try1)
 print(a_try2)
 print(a_try3)
+print(a_try4)
+
