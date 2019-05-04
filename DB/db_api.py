@@ -9,9 +9,9 @@ class DatabaseLayer(object):
                                      user=config.MyDB['user'],
                                      password=config.MyDB['password'],
                                      db=config.MyDB['dbname'])
-        self.cur = self.cxn.cursor(dictionary=True)
+        self.cur = self.cxn.cursor()
 
-    def get_accession_code(self, query, return_cds=True, return_dna=True, return_attribute=True):
+    def get_accession_code(self, query, return_cds=True, return_dna=False, return_attribute=False):
 
         ''' Retrieves all rows that match the given accession code
 
@@ -22,10 +22,10 @@ class DatabaseLayer(object):
             return_cds (boolean): Default: True
             When set to "True" returns string showing the coding sequence loation
 
-            return_dna (boolean): Default: True
+            return_dna (boolean): Default: False
             When set to "True" returns string showing the DNA sequence
 
-            return_attributes (boolean): Default: True
+            return_attributes (boolean): Default: False
             When set to "True" returns a list giving attributes for the a
             coding sequence
         
@@ -37,21 +37,21 @@ class DatabaseLayer(object):
         gene_entry = []
         
         if return_attribute:
-            attribute = self.cur.execute("SELECT * from attributes WHERE accession_code = '%s' " %(query))
+            attribute = self.cur.execute("SELECT * from attribute WHERE accession_code = '%s' " %(query))
             attribute = self.cur.fetchall()
-            gene_entry.append(attribute)
+            gene_entry.extend(attribute)
         if return_cds:
-            cds = self.cur.execute("SELECT cds from seq WHERE accession_code = '%s' " %(query))
+            cds = self.cur.execute("SELECT cds from attribute WHERE accession_code = '%s' " %(query))
             cds = self.cur.fetchall()
-            gene_entry.append(cds)
-        if return_seq:
+            gene_entry.extend(cds)
+        if return_dna:
             seq = self.cur.execute("SELECT dna_seq from seq WHERE accession_code = '%s' " %(query))
             seq = self.cur.fetchall()
-            gene_entry.append(seq)
+            gene_entry.extend(seq)
 
         return gene_entry
         
-    def get_chromosomal_loc(self, query, return_cds=True, return_dna=True, return_attribute=True):
+    def get_chromosomal_loc(self, query, return_cds=True, return_dna=False, return_attribute=False):
 
         ''' Retrieves all rows that match the given chromosomal location
 
@@ -62,10 +62,10 @@ class DatabaseLayer(object):
             return_cds (boolean): Default: True
             When set to "True" returns string showing the coding sequence loation
 
-            return_dna (boolean): Default: True
+            return_dna (boolean): Default: False
             When set to "True" returns string showing the DNA sequence
 
-            return_attributes (boolean): Default: True
+            return_attributes (boolean): Default: False
             When set to "True" returns a list giving attributes for the a
             coding sequence
         
@@ -77,21 +77,21 @@ class DatabaseLayer(object):
         gene_entry = []
         
         if return_attribute:
-            attribute = self.cur.execute("SELECT * from attributes WHERE chromosomal_loc = '%s' " %(query))
+            attribute = self.cur.execute("SELECT * from attribute WHERE chromosomal_loc = '%s' " %(query))
             attribute = self.cur.fetchall()
-            gene_entry.append(attribute)
+            gene_entry.extend(attribute)
         if return_cds:
-            cds = self.cur.execute("SELECT cds from seq s, atribute a WHERE s.accession_code = a.accession_code AND chromosomal_loc = '%s' " %(query))
+            cds = self.cur.execute("SELECT cds from seq s, attribute a WHERE s.accession_code = a.accession_code AND chromosomal_loc = '%s' " %(query))
             cds = self.cur.fetchall()
-            gene_entry.append(cds)
-        if return_seq:
-            seq = self.cur.execute("SELECT dna_seq from seq s, atribute a WHERE s.accession_code = a.accession_code AND chromosomal_loc = '%s' " %(query))
+            gene_entry.extend(cds)
+        if return_dna:
+            seq = self.cur.execute("SELECT dna_seq from seq s, attribute a WHERE s.accession_code = a.accession_code AND chromosomal_loc = '%s' " %(query))
             seq = self.cur.fetchall()
-            gene_entry.append(seq)
+            gene_entry.extend(seq)
 
         return gene_entry
 
-    def get_gene_id(self, query, return_cds=True, return_dna=True, return_attribute=True):
+    def get_gene_id(self, query, return_cds=True, return_dna=False, return_attribute=False):
         ''' Retrieves all rows that match the given gene identifier
 
 
@@ -101,10 +101,10 @@ class DatabaseLayer(object):
             return_cds (boolean): Default: True
             When set to "True" returns string showing the coding sequence loation
 
-            return_dna (boolean): Default: True
+            return_dna (boolean): Default: False
             When set to "True" returns string showing the DNA sequence
 
-            return_attributes (boolean): Default: True
+            return_attributes (boolean): Default: False
             When set to "True" returns a list giving attributes for the a
             coding sequence
         
@@ -117,21 +117,21 @@ class DatabaseLayer(object):
         gene_entry = []
         
         if return_attribute:
-            attribute = self.cur.execute("SELECT * from attributes WHERE gene_id = '%s' " %(query))
+            attribute = self.cur.execute("SELECT * from attribute WHERE gene_id = '%s' " %(query))
             attribute = self.cur.fetchall()
-            gene_entry.append(attribute)
+            gene_entry.extend(attribute)
         if return_cds:
-            cds = self.cur.execute("SELECT cds from seq s, atribute a WHERE s.accession_code = a.accession_code AND gene_id = '%s' " %(query))
+            cds = self.cur.execute("SELECT cds from seq s, attribute a WHERE s.accession_code = a.accession_code AND gene_id = '%s' " %(query))
             cds = self.cur.fetchall()
-            gene_entry.append(cds)
-        if return_seq:
-            seq = self.cur.execute("SELECT dna_seq from seq s, atribute a WHERE s.accession_code = a.accession_code AND gene_id = '%s' " %(query))
+            gene_entry.extend(cds)
+        if return_dna:
+            seq = self.cur.execute("SELECT dna_seq from seq s, attribute a WHERE s.accession_code = a.accession_code AND gene_id = '%s' " %(query))
             seq = self.cur.fetchall()
-            gene_entry.append(seq)
+            gene_entry.extend(seq)
 
         return gene_entry
 
-    def get_protein_product(self, query, return_cds=True, return_dna=True, return_attribute=True):
+    def get_protein_product(self, query, return_cds=True, return_dna=False, return_attribute=False):
         ''' Retrieves all rows that match the given protein product
 
 
@@ -141,10 +141,10 @@ class DatabaseLayer(object):
             return_cds (boolean): Default: True
             When set to "True" returns string showing the coding sequence loation
 
-            return_dna (boolean): Default: True
+            return_dna (boolean): Default: False
             When set to "True" returns string showing the DNA sequence
 
-            return_attributes (boolean): Default: True
+            return_attributes (boolean): Default: False
             When set to "True" returns a list giving attributes for the a
             coding sequence
         
@@ -157,17 +157,17 @@ class DatabaseLayer(object):
         gene_entry = []
         
         if return_attribute:
-            attribute = self.cur.execute("SELECT * from attributes WHERE protein_product = '%s' " %(query))
+            attribute = self.cur.execute("SELECT * from attribute WHERE protein_product = '%s' " %(query))
             attribute = self.cur.fetchall()
-            gene_entry.append(attribute)
+            gene_entry.extend(attribute)
         if return_cds:
-            cds = self.cur.execute("SELECT cds from seq s, atribute a WHERE s.accession_code = a.accession_code AND protein_product = '%s' " %(query))
+            cds = self.cur.execute("SELECT cds from seq s, attribute a WHERE s.accession_code = a.accession_code AND protein_product = '%s' " %(query))
             cds = self.cur.fetchall()
-            gene_entry.append(cds)
-        if return_seq:
-            seq = self.cur.execute("SELECT dna_seq from seq s, atribute a WHERE s.accession_code = a.accession_code AND protein_product = '%s' " %(query))
+            gene_entry.extend(cds)
+        if return_dna:
+            seq = self.cur.execute("SELECT dna_seq from seq s, attribute a WHERE s.accession_code = a.accession_code AND protein_product = '%s' " %(query))
             seq = self.cur.fetchall()
-            gene_entry.append(seq)
+            gene_entry.extend(seq)
 
         return gene_entry
     
