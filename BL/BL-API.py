@@ -57,6 +57,7 @@ class Entry:
     """
     def get_dna_seq(query):
         """ displays DNA seq associated with the query"""
+
         return DB.get_gene_entry(query)["DNA_seq"]
 
     def get_aminoacid_seq(query):
@@ -213,7 +214,7 @@ def codon_frequency(query):
     codon_freq={}
     for codon in the_codons:
         codon_freq[codon]=round(the_codons.count(codon)/len(the_codons)*100, 2)
-    return(codon_freq)
+    return codon_freq
 
 
 def check_alignment(query):
@@ -235,25 +236,64 @@ def return_aligned_aa_seq(query):
         aligned_aa_seq = DNA_to_protein(query)
     return aligned_aa_seq
 
-def codon_usage_for_table():
-    all_entries =DB.gene_entry
-    all_codon_count_dict={}
-    for entry in all_entries:
-        a_codon_usage  = codon_frequency(entry)
-        all_codon_count_dict.add(a_codon_usage)
 
+
+
+
+def get_all_codons():
+    all_entries =DB.get_all_entries()
+    list_all_codons_count = []
+    for entry in all_entries:
+        dna_seq = entry["DNA_seq"]
+        codons = [dna_seq[i:i + 3] for i in range(0, len(dna_seq), 3)]
+        for i in range(0, len(codons)):
+            if len(codons[i])%3!=0:
+                del codons[i]
+        list_all_codons_count.append(codons)
+    return list_all_codons_count
+
+def codon_count_codons_all():
+    the_codons = get_all_codons()
+    codon_count_all_list = []
+    codon_count={}
+    for codon_list in the_codons:
+        for codon in codon_list:
+            codon_count[codon]=codon_list.count(codon)
+        codon_count_all_list.append(codon_count)
+    return codon_count_all_list
+
+def codon_usage_all_entries():
+    all_codons =codon_count_codons_all()
+
+    all_codon_count_dict={}
+    for i in range(1, len(all_codons)):
+        for key in all_codons[i]:
+            if key in all_codons[i-1]:
+                total_frequency = all_codons[i][key]+all_codons[i-1][key]
+            else:
+                total_frequency = all_codons[i]
+            all_codon_count_dict[key]=total_frequency
+        for key in all_codons[i-1]:
+            if key not in all_codon_count_dict:
+                all_codon_count_dict[key]=all_codons[i-1][key]
     return all_codon_count_dict
+
+def codon_frequency_all_entries():
+    """
+    to be used to display a table of codon frequency for all entries
+    :return: codon_freq_all_dict
+    """
+    the_codons = get_all_codons()
+    codon_freq_all_dict={}
+    for codon_list in the_codons:
+        for codon in codon_list:
+            codon_freq_all_dict[codon]=round(((codon_list.count(codon))/sum(codon_usage_all_entries().values()))*100 , 2)
+    return codon_freq_all_dict
 
 
 
 
 a_try1=DNA_to_protein('678')
-a_try2=Entry.get_coding_seq('678')
-a_try3=get_codons('678')
-a_try4=codon_usage_for_table()
+a_try2=codon_frequency_all_entries()
 
-print(a_try1)
 print(a_try2)
-print(a_try3)
-print(a_try4)
-
