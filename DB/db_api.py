@@ -1,17 +1,35 @@
 #!/usr/bin/env python3
+import sys
+sys.path.insert(0, "../")
+
 import mysql.connector
 import config
-''' Use this module to retrieve results from the database layer '''
-class DatabaseLayer(object):
+
+class DBAccessLayer(object):
+    ''' Use this module to retrieve results from the database layer '''
 
     def __init__(self):
+        ''' Establishes connection with MySQL Database
+
+        Return: Connection object and cursor object
+
+        '''
         self.cxn = mysql.connector.connect(host=config.MyDB['host'],
                                      user=config.MyDB['user'],
                                      password=config.MyDB['password'],
                                      db=config.MyDB['dbname'])
-        self.cur = self.cxn.cursor()
+        self.cur = self.cxn.cursor(dictionary=True)
 
-    def get_accession_code(self, query, return_cds=True, return_dna=False, return_attribute=False):
+    def getAllEntries(self):
+        ''' Retrieves the accession codes and gene names for all entries in the database '''
+        
+        entries = self.cur.execute("SELECT accession_code from attribute")
+        entries = self.cur.fetchall()
+
+        return entries
+        
+
+    def get_accession_code(self, query, return_cds=True, return_dna=False, return_protein=False):
 
         ''' Retrieves all rows that match the given accession code
 
@@ -25,9 +43,8 @@ class DatabaseLayer(object):
             return_dna (boolean): Default: False
             When set to "True" returns string showing the DNA sequence
 
-            return_attributes (boolean): Default: False
-            When set to "True" returns a list giving attributes for the a
-            coding sequence
+            return_protein (boolean): Default: False
+            When set to "True" returns a list giving a protein sequence for a given entry
         
         Return:
         gene_entry: list containing information related to the query based on which
@@ -36,8 +53,8 @@ class DatabaseLayer(object):
         '''
         gene_entry = []
         
-        if return_attribute:
-            attribute = self.cur.execute("SELECT * from attribute WHERE accession_code = '%s' " %(query))
+        if return_protein:
+            attribute = self.cur.execute("SELECT protein_seq from attribute WHERE accession_code = '%s' " %(query))
             attribute = self.cur.fetchall()
             gene_entry.extend(attribute)
         if return_cds:
@@ -51,7 +68,7 @@ class DatabaseLayer(object):
 
         return gene_entry
         
-    def get_chromosomal_loc(self, query, return_cds=True, return_dna=False, return_attribute=False):
+    def get_chromosomal_loc(self, query, return_cds=True, return_dna=False, return_protein=False):
 
         ''' Retrieves all rows that match the given chromosomal location
 
@@ -65,9 +82,8 @@ class DatabaseLayer(object):
             return_dna (boolean): Default: False
             When set to "True" returns string showing the DNA sequence
 
-            return_attributes (boolean): Default: False
-            When set to "True" returns a list giving attributes for the a
-            coding sequence
+            return_protein (boolean): Default: False
+            When set to "True" returns a list giving a protein sequence for a given entry
         
         Return:
         gene_entry: list containing information related to the query based on which
@@ -76,8 +92,8 @@ class DatabaseLayer(object):
         '''
         gene_entry = []
         
-        if return_attribute:
-            attribute = self.cur.execute("SELECT * from attribute WHERE chromosomal_loc = '%s' " %(query))
+        if return_protein:
+            attribute = self.cur.execute("SELECT protein_seq from attribute WHERE chromosomal_loc = '%s' " %(query))
             attribute = self.cur.fetchall()
             gene_entry.extend(attribute)
         if return_cds:
@@ -91,7 +107,7 @@ class DatabaseLayer(object):
 
         return gene_entry
 
-    def get_gene_id(self, query, return_cds=True, return_dna=False, return_attribute=False):
+    def get_gene_id(self, query, return_cds=True, return_dna=False, return_protein=False):
         ''' Retrieves all rows that match the given gene identifier
 
 
@@ -104,9 +120,8 @@ class DatabaseLayer(object):
             return_dna (boolean): Default: False
             When set to "True" returns string showing the DNA sequence
 
-            return_attributes (boolean): Default: False
-            When set to "True" returns a list giving attributes for the a
-            coding sequence
+            return_protein (boolean): Default: False
+            When set to "True" returns a list giving a protein sequence for a given entry
         
         Return:
         gene_entry: list containing information related to the query based on which
@@ -116,8 +131,8 @@ class DatabaseLayer(object):
         '''
         gene_entry = []
         
-        if return_attribute:
-            attribute = self.cur.execute("SELECT * from attribute WHERE gene_id = '%s' " %(query))
+        if return_protein:
+            attribute = self.cur.execute("SELECT protein_seq from attribute WHERE gene_id = '%s' " %(query))
             attribute = self.cur.fetchall()
             gene_entry.extend(attribute)
         if return_cds:
@@ -131,7 +146,7 @@ class DatabaseLayer(object):
 
         return gene_entry
 
-    def get_protein_product(self, query, return_cds=True, return_dna=False, return_attribute=False):
+    def get_protein_product(self, query, return_cds=True, return_dna=False, return_protein=False):
         ''' Retrieves all rows that match the given protein product
 
 
@@ -144,9 +159,8 @@ class DatabaseLayer(object):
             return_dna (boolean): Default: False
             When set to "True" returns string showing the DNA sequence
 
-            return_attributes (boolean): Default: False
-            When set to "True" returns a list giving attributes for the a
-            coding sequence
+            return_protein (boolean): Default: False
+            When set to "True" returns a list giving a protein sequence for a given entry
         
         Return:
         gene_entry: list containing information related to the query based on which
@@ -156,8 +170,8 @@ class DatabaseLayer(object):
         '''
         gene_entry = []
         
-        if return_attribute:
-            attribute = self.cur.execute("SELECT * from attribute WHERE protein_product = '%s' " %(query))
+        if return_protein:
+            attribute = self.cur.execute("SELECT protein_seq from attribute WHERE protein_product = '%s' " %(query))
             attribute = self.cur.fetchall()
             gene_entry.extend(attribute)
         if return_cds:
