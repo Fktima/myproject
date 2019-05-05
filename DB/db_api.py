@@ -97,7 +97,7 @@ class DBAccessLayer(object):
             attribute = self.cur.fetchall()
             gene_entry.extend(attribute)
         if return_cds:
-            cds = self.cur.execute("SELECT cds from seq s, attribute a WHERE s.accession_code = a.accession_code AND chromosomal_loc = '%s' " %(query))
+            cds = self.cur.execute("SELECT cds from attribute WHERE chromosomal_loc = '%s' " %(query))
             cds = self.cur.fetchall()
             gene_entry.extend(cds)
         if return_dna:
@@ -175,7 +175,7 @@ class DBAccessLayer(object):
             attribute = self.cur.fetchall()
             gene_entry.extend(attribute)
         if return_cds:
-            cds = self.cur.execute("SELECT cds from seq s, attribute a WHERE s.accession_code = a.accession_code AND protein_product = '%s' " %(query))
+            cds = self.cur.execute("SELECT cds from attribute WHERE protein_product = '%s' " %(query))
             cds = self.cur.fetchall()
             gene_entry.extend(cds)
         if return_dna:
