@@ -58,14 +58,22 @@ class Entry:
     """
     def get_dna_seq(query):
         """ displays DNA seq associated with the query"""
-
-        return DB.get_gene_entry(query)["DNA_seq"]
+        dna_seq = DB.get_gene_entry(query)["DNA_seq"]
+        if not dna_seq.isalpha():
+            raise TypeError("Not valid")
+        else:
+            return dna_seq
 
     def get_aminoacid_seq(query):
         """ displays the amino acid sequence
-         parameters: query, type string
+         parameters: query, type st
+         ring
         returns the amino acid sequence"""
-        return DB.get_gene_entry(query)["aminoacid_sequence"]
+        amino_acid_seq =  DB.get_gene_entry(query)["aminoacid_sequence"]
+        if not amino_acid_seq.isalpha(): #checks if all characters in the string are alphabets
+            raise TypeError("Not valid")
+        else:
+            return amino_acid_seq
 
     def get_coding_seq(query):
         """
@@ -77,12 +85,21 @@ class Entry:
         coord =DB.get_gene_entry(query)['CDS']
         coding_seq = Entry.get_dna_seq(query)[coord[0]-1:coord[1]]
         return coding_seq
+
     def get_CDS_coord(query):
         """
         displays the coordinates of CDS
         :return: a list of lists containing pairs of 2 coordinates
         """
-        return DB.get_gene_entry(query)['CDS']
+        valid = False
+        cds_coord =  DB.get_gene_entry(query)['CDS']
+        for coord in cds_coord:
+            if type(coord)==int and coord>0:
+                valid = True
+        if valid == True:
+            return cds_coord
+        else:
+            raise TypeError("Not valid")
 
     def get_codon_frequency(query):
         """
@@ -112,84 +129,6 @@ class Entry:
         :return: a dictionary of codons and their frequencies in percentages rounded to 2 decimals
         """
         return codon_frequency_all_entries()
-
-
-"""
-------------------------------------------------------------------------------------------------------------------------
-------------------------------------------Restriction enzymes-----------------------------------------------------------
-------------------------------------------------------------------------------------------------------------------------
-"""
-
-"""recognition_sites_5prime={
-    "EcorI": "GAATTC",
-    "BamHI": "GGATCC",
-    "BsuMI": "CTCGAG"
-}
-"""
-
-def non_coding_dna_seq(query):
-    """
-    retrieves the non coding DNA sequence downstream and upstream of the coding region
-    :param query: 
-    :return: non_coding_seq type string
-    """
-    non_coding_seq = ''
-    whole_dna_seq = Entry.get_dna_seq(query)
-    coord =DB.get_gene_entry(query)['CDS']
-    start = coord[0]
-    end = coord[1]
-    upstream_non_coding = whole_dna_seq[0:(start-1)]
-    downstream_non_coding = whole_dna_seq[(end-1):len(whole_dna_seq)-1]
-    non_coding_seq = non_coding_seq+upstream_non_coding+downstream_non_coding
-    return non_coding_seq
-
-def find_restriction_sites(query):
-    """ this function determines the cutting sites for the enzymes. To be used by front end.
-    Output: a dictionary of arrays of where the enzymes cut.
-    """
-    re_ecorI = re.compile(r'GAATTC')
-    re_BamHI = re.compile(r'GGATCC')
-    re_BsuMI = re.compile(r'CTCGAG')
-    cutting_position_ecorI =[]
-    cutting_position_BamHI =[]
-    cutting_position_BsuMI =[]
-    dna_seq = non_coding_dna_seq(query)
-    for a_match in  re_ecorI.finditer(dna_seq):
-        cutting_position_ecorI.append(a_match.start()+1) #used +1 as enzyme cuts after first base in the recognition pattern
-    for a_match in  re_BamHI.finditer(dna_seq):
-        cutting_position_BamHI.append(a_match.start()+1)
-    for a_match in  re_BsuMI.finditer(dna_seq):
-        cutting_position_BsuMI.append(a_match.start()+1)
-    cutting_positions_dict = {
-        "ecorI": cutting_position_ecorI,
-        "BamHI": cutting_position_BamHI,
-        "BsuMI": cutting_position_BsuMI
-    }
-    return cutting_positions_dict
-
-
-def check_which_enzyme_cuts(query):
-    """
-    workouts which enzyme cuts in the non coding region 
-    :param query: 
-    :return: dictionary of enzyme names as keys and True or Not depending if the cut or not 
-    """
-    check_ecorI = False
-    check_BamHI = False
-    check_BsuMI = False
-    if len(find_restriction_sites(query)['ecorI'])>0 :
-        check_ecorI = True
-    if len(find_restriction_sites(query)['BamHI'])>0:
-        check_BamHI = True
-    if len(find_restriction_sites(query)['BsuMI'])>0:
-        check_BsuMI = True
-    check_which_enzyme_dict ={
-        "ecorI": check_ecorI,
-        "BamHI": check_BamHI,
-        "BsuMI": check_BsuMI
-    }
-    return check_which_enzyme_dict
-
 
 """
 ------------------------------------------------------------------------------------------------------------------------
@@ -225,7 +164,7 @@ def get_codons(query):
     :param query:
     :return: codons
     """
-    dna_seq = Entry.get_coding_seq(query)
+    dna_seq = Entry.get_dna_seq(query)
     codons = [dna_seq[i:i + 3] for i in range(0, len(dna_seq), 3)]
     for i in range(0, len(codons)):
         if len(codons[i])%3!=0:
@@ -297,7 +236,7 @@ def return_aligned_aa_seq(query):
 def get_all_codons():
     """
     retrieves all codons for al entries in the database
-    :return:  a list of lists of codons. each sublist contains the codons corresponding to a single entry   
+    :return:  a list of lists of codons. each sublist contains the codons corresponding to a single entry
     """
     all_entries =DB.get_all_entries()
     list_all_codons_count = []
@@ -312,8 +251,8 @@ def get_all_codons():
 
 def codon_count_codons_all():
     """
-    creates a list of all codon counts in each entry    
-    :return: a list of dictionaries where each dictionary contains the codons and their count in each entry    
+    creates a list of all codon counts in each entry
+    :return: a list of dictionaries where each dictionary contains the codons and their count in each entry
     """
     the_codons = get_all_codons()
     codon_count_all_list = []
@@ -327,7 +266,7 @@ def codon_count_codons_all():
 def codon_usage_all_entries():
     """
     workouts the codon frequency of all codons in every entry in the database
-    :return: array containing the frequency of each codon in the entire database, displayed as percentages      
+    :return: array containing the frequency of each codon in the entire database, displayed as percentages
     """
     all_codons =codon_count_codons_all()
 
@@ -357,9 +296,87 @@ def codon_frequency_all_entries():
     return codon_freq_all_dict
 
 
+"""
+------------------------------------------------------------------------------------------------------------------------
+------------------------------------------Restriction enzymes-----------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------
+"""
+
+"""recognition_sites_5prime={
+    "EcorI": "GAATTC",
+    "BamHI": "GGATCC",
+    "BsuMI": "CTCGAG"
+}
+"""
+
+def non_coding_dna_seq(query):
+    """
+    retrieves the non coding DNA sequence downstream and upstream of the coding region
+    :param query:
+    :return: non_coding_seq type string
+    """
+    non_coding_seq = ''
+    whole_dna_seq = Entry.get_dna_seq(query)
+    coord =DB.get_gene_entry(query)['CDS']
+    start = coord[0]
+    end = coord[1]
+    upstream_non_coding = whole_dna_seq[0:(start-1)]
+    downstream_non_coding = whole_dna_seq[(end-1):len(whole_dna_seq)-1]
+    non_coding_seq = non_coding_seq+upstream_non_coding+" " + downstream_non_coding
+    return non_coding_seq
+
+def find_restriction_sites(query):
+    """ this function determines the cutting sites for the enzymes. To be used by front end.
+    Output: a dictionary of arrays of where the enzymes cut.
+    """
+    re_ecorI = re.compile(r'GAATTC')
+    re_BamHI = re.compile(r'GGATCC')
+    re_BsuMI = re.compile(r'CTCGAG')
+    cutting_position_ecorI =[]
+    cutting_position_BamHI =[]
+    cutting_position_BsuMI =[]
+    dna_seq = non_coding_dna_seq(query)
+    for a_match in  re_ecorI.finditer(dna_seq):
+        cutting_position_ecorI.append(a_match.start()+1) #used +1 as enzyme cuts after first base in the recognition pattern
+    for a_match in  re_BamHI.finditer(dna_seq):
+        cutting_position_BamHI.append(a_match.start()+1)
+    for a_match in  re_BsuMI.finditer(dna_seq):
+        cutting_position_BsuMI.append(a_match.start()+1)
+    cutting_positions_dict = {
+        "ecorI": cutting_position_ecorI,
+        "BamHI": cutting_position_BamHI,
+        "BsuMI": cutting_position_BsuMI
+    }
+    return cutting_positions_dict
+
+
+def check_which_enzyme_cuts(query):
+    """
+    workouts which enzyme cuts in the non coding region
+    :param query:
+    :return: dictionary of enzyme names as keys and True or Not depending if the cut or not
+    """
+    check_ecorI = False
+    check_BamHI = False
+    check_BsuMI = False
+    if len(find_restriction_sites(query)['ecorI'])>0 :
+        check_ecorI = True
+    if len(find_restriction_sites(query)['BamHI'])>0:
+        check_BamHI = True
+    if len(find_restriction_sites(query)['BsuMI'])>0:
+        check_BsuMI = True
+    check_which_enzyme_dict ={
+        "ecorI": check_ecorI,
+        "BamHI": check_BamHI,
+        "BsuMI": check_BsuMI
+    }
+    return check_which_enzyme_dict
+
+
+
 
 #Just trying some bits
 a_try1=DNA_to_protein('678')
 a_try2=codon_frequency_all_entries()
 
-print(Entry.get_CDS_coord('678'))
+print(check_which_enzyme_cuts('678'))
