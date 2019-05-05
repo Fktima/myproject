@@ -18,7 +18,8 @@ class DBAccessLayer(object):
                                      user=config.MyDB['user'],
                                      password=config.MyDB['password'],
                                      db=config.MyDB['dbname'])
-        self.cur = self.cxn.cursor(dictionary=True)
+        self.cur = self.cxn.cursor()
+        self.cur_dict = self.cxn.cursor(dictionary=True)
 
     def getAllEntries(self):
         ''' Retrieves the accession codes and gene names for all entries in the database '''
@@ -27,9 +28,18 @@ class DBAccessLayer(object):
         entries = self.cur.fetchall()
 
         return entries
+
+    def getAll(self):
+        
+        ''' Retrieves required data for BL to calculate frequency '''
+        
+         data = self.cur.execute("SELECT dna_seq from seq")
+         data = self.cur.fetchall()
+
+        return data
         
 
-    def get_accession_code(self, query, return_cds=True, return_dna=False, return_protein=False):
+    def get_accession_code(self, query, return_cds=False, return_dna=False, return_protein=False):
 
         ''' Retrieves all rows that match the given accession code
 
@@ -37,14 +47,17 @@ class DBAccessLayer(object):
         Parameters:
             query (str): Accession Code
 
-            return_cds (boolean): Default: True
-            When set to "True" returns string showing the coding sequence loation
+            return_cds (boolean): Default: False
+            When set to "True" returns string showing the coding sequence loation.
 
             return_dna (boolean): Default: False
-            When set to "True" returns string showing the DNA sequence
+            When set to "True" returns string showing the DNA sequence.
 
             return_protein (boolean): Default: False
-            When set to "True" returns a list giving a protein sequence for a given entry
+            When set to "True" returns a list giving a protein sequence for a given entry.
+
+            return_attribute (boolean): Default: False
+            When set to true return a list of accession codes and repective protein names.
         
         Return:
         gene_entry: list containing information related to the query based on which
@@ -65,10 +78,14 @@ class DBAccessLayer(object):
             seq = self.cur.execute("SELECT dna_seq from seq WHERE accession_code = '%s' " %(query))
             seq = self.cur.fetchall()
             gene_entry.extend(seq)
+        if return_atributes:
+            attributes = self.cur.execute("SELECT accession_code, protein_product from attribute WHERE accession_code = '%s' " %(query))
+            attributes = self.cur.fetchall()
+            gene_entry.extend(attributes)
 
         return gene_entry
         
-    def get_chromosomal_loc(self, query, return_cds=True, return_dna=False, return_protein=False):
+    def get_chromosomal_loc(self, query, return_cds=False, return_dna=False, return_protein=False):
 
         ''' Retrieves all rows that match the given chromosomal location
 
@@ -76,14 +93,17 @@ class DBAccessLayer(object):
         Parameters:
             query (str): Chromosomal Location
 
-            return_cds (boolean): Default: True
-            When set to "True" returns string showing the coding sequence loation
+            return_cds (boolean): Default: False
+            When set to "True" returns string showing the coding sequence loation.
 
             return_dna (boolean): Default: False
-            When set to "True" returns string showing the DNA sequence
+            When set to "True" returns string showing the DNA sequence.
 
             return_protein (boolean): Default: False
-            When set to "True" returns a list giving a protein sequence for a given entry
+            When set to "True" returns a list giving a protein sequence for a given entry.
+
+            return_attribute (boolean): Default: False
+            When set to true return a list of accession codes and repective protein names.
         
         Return:
         gene_entry: list containing information related to the query based on which
@@ -104,24 +124,31 @@ class DBAccessLayer(object):
             seq = self.cur.execute("SELECT dna_seq from seq s, attribute a WHERE s.accession_code = a.accession_code AND chromosomal_loc = '%s' " %(query))
             seq = self.cur.fetchall()
             gene_entry.extend(seq)
+        if return_atributes:
+            attributes = self.cur.execute("SELECT accession_code, protein_product from attribute WHERE chromosomal_loc = '%s' " %(query))
+            attributes = self.cur.fetchall()
+            gene_entry.extend(attributes)
 
         return gene_entry
 
-    def get_gene_id(self, query, return_cds=True, return_dna=False, return_protein=False):
+    def get_gene_id(self, query, return_cds=False, return_dna=False, return_protein=False):
         ''' Retrieves all rows that match the given gene identifier
 
 
         Parameters:
             query (str): Gene Identifier
 
-            return_cds (boolean): Default: True
-            When set to "True" returns string showing the coding sequence loation
+            return_cds (boolean): Default: False
+            When set to "True" returns string showing the coding sequence loation.
 
             return_dna (boolean): Default: False
-            When set to "True" returns string showing the DNA sequence
+            When set to "True" returns string showing the DNA sequence.
 
             return_protein (boolean): Default: False
-            When set to "True" returns a list giving a protein sequence for a given entry
+            When set to "True" returns a list giving a protein sequence for a given entry.
+
+            return_attribute (boolean): Default: False
+            When set to true return a list of accession codes and repective protein names.
         
         Return:
         gene_entry: list containing information related to the query based on which
@@ -143,24 +170,32 @@ class DBAccessLayer(object):
             seq = self.cur.execute("SELECT dna_seq from seq s, attribute a WHERE s.accession_code = a.accession_code AND gene_id = '%s' " %(query))
             seq = self.cur.fetchall()
             gene_entry.extend(seq)
+        if return_atributes:
+            attributes = self.cur.execute("SELECT accession_code, protein_product from attribute WHERE gene_id = '%s' " %(query))
+            attributes = self.cur.fetchall()
+            gene_entry.extend(attributes)
 
         return gene_entry
 
-    def get_protein_product(self, query, return_cds=True, return_dna=False, return_protein=False):
+    def get_protein_product(self, query, return_cds=False, return_dna=False, return_protein=False,
+                            return_attributes=False):
         ''' Retrieves all rows that match the given protein product
 
 
         Parameters:
             query (str): Protein product
 
-            return_cds (boolean): Default: True
-            When set to "True" returns string showing the coding sequence loation
+            return_cds (boolean): Default: False
+            When set to "True" returns string showing the coding sequence loation.
 
             return_dna (boolean): Default: False
-            When set to "True" returns string showing the DNA sequence
+            When set to "True" returns string showing the DNA sequence.
 
             return_protein (boolean): Default: False
-            When set to "True" returns a list giving a protein sequence for a given entry
+            When set to "True" returns a list giving a protein sequence for a given entry.
+
+            return_attribute (boolean): Default: False
+            When set to true return a list of accession codes and repective protein names.
         
         Return:
         gene_entry: list containing information related to the query based on which
@@ -182,6 +217,10 @@ class DBAccessLayer(object):
             seq = self.cur.execute("SELECT dna_seq from seq s, attribute a WHERE s.accession_code = a.accession_code AND protein_product = '%s' " %(query))
             seq = self.cur.fetchall()
             gene_entry.extend(seq)
+        if return_atributes:
+            attributes = self.cur.execute("SELECT accession_code, protein_product from attribute WHERE protein_product = '%s' " %(query))
+            attributes = self.cur.fetchall()
+            gene_entry.extend(attributes)
 
         return gene_entry
     
