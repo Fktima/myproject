@@ -45,8 +45,8 @@ class SummaryList:
     def get_protein_product_list():
         protein_product_names=DB.get_protein_product_names() #this ins not the actual name of the funcion from the DB API
         return protein_product_names
-    def get_genbank_accession_liest():
-        genbank_accession_list = DB.get_accessions() #this ins not the actual name of the funcion from the DB API
+    def get_genbank_accession_list():
+        genbank_accession_list = DB.get_accession_list() #this ins not the actual name of the funcion from the DB API
         return genbank_accession_list
     def get_chromosomal_loc_list():
         chromosomal_locations = DB.get_chromosomal_locations() #this ins not the actual name of the funcion from the DB API
@@ -77,6 +77,12 @@ class Entry:
         coord =DB.get_gene_entry(query)['CDS']
         coding_seq = Entry.get_dna_seq(query)[coord[0]-1:coord[1]]
         return coding_seq
+    def get_CDS_coord(query):
+        """
+        displays the coordinates of CDS
+        :return: a list of lists containing pairs of 2 coordinates
+        """
+        return DB.get_gene_entry(query)['CDS']
 
     def get_codon_frequency(query):
         """
@@ -121,6 +127,22 @@ class Entry:
 }
 """
 
+def non_coding_dna_seq(query):
+    """
+    retrieves the non coding DNA sequence downstream and upstream of the coding region
+    :param query: 
+    :return: non_coding_seq type string
+    """
+    non_coding_seq = ''
+    whole_dna_seq = Entry.get_dna_seq(query)
+    coord =DB.get_gene_entry(query)['CDS']
+    start = coord[0]
+    end = coord[1]
+    upstream_non_coding = whole_dna_seq[0:(start-1)]
+    downstream_non_coding = whole_dna_seq[(end-1):len(whole_dna_seq)-1]
+    non_coding_seq = non_coding_seq+upstream_non_coding+downstream_non_coding
+    return non_coding_seq
+
 def find_restriction_sites(query):
     """ this function determines the cutting sites for the enzymes. To be used by front end.
     Output: a dictionary of arrays of where the enzymes cut.
@@ -131,7 +153,7 @@ def find_restriction_sites(query):
     cutting_position_ecorI =[]
     cutting_position_BamHI =[]
     cutting_position_BsuMI =[]
-    dna_seq = Entry.get_coding_seq(query)
+    dna_seq = non_coding_dna_seq(query)
     for a_match in  re_ecorI.finditer(dna_seq):
         cutting_position_ecorI.append(a_match.start()+1) #used +1 as enzyme cuts after first base in the recognition pattern
     for a_match in  re_BamHI.finditer(dna_seq):
@@ -147,6 +169,11 @@ def find_restriction_sites(query):
 
 
 def check_which_enzyme_cuts(query):
+    """
+    workouts which enzyme cuts in the non coding region 
+    :param query: 
+    :return: dictionary of enzyme names as keys and True or Not depending if the cut or not 
+    """
     check_ecorI = False
     check_BamHI = False
     check_BsuMI = False
@@ -182,6 +209,7 @@ table = {
     'CAC':'H', 'CAT':'H', 'CAA':'Q', 'CAG':'Q',
     'CGA':'R', 'CGC':'R', 'CGG':'R', 'CGT':'R',
     'GTA':'V', 'GTC':'V', 'GTG':'V', 'GTT':'V',
+    'GCA':'A', 'GCC':'A', 'GCG':'A', 'GCT':'A',
     'GCA':'A', 'GCC':'A', 'GCG':'A', 'GCT':'A',
     'GAC':'D', 'GAT':'D', 'GAA':'E', 'GAG':'E',
     'GGA':'G', 'GGC':'G', 'GGG':'G', 'GGT':'G',
@@ -267,6 +295,10 @@ def return_aligned_aa_seq(query):
 
 
 def get_all_codons():
+    """
+    retrieves all codons for al entries in the database
+    :return:  a list of lists of codons. each sublist contains the codons corresponding to a single entry   
+    """
     all_entries =DB.get_all_entries()
     list_all_codons_count = []
     for entry in all_entries:
@@ -279,6 +311,10 @@ def get_all_codons():
     return list_all_codons_count
 
 def codon_count_codons_all():
+    """
+    creates a list of all codon counts in each entry    
+    :return: a list of dictionaries where each dictionary contains the codons and their count in each entry    
+    """
     the_codons = get_all_codons()
     codon_count_all_list = []
     codon_count={}
@@ -289,6 +325,10 @@ def codon_count_codons_all():
     return codon_count_all_list
 
 def codon_usage_all_entries():
+    """
+    workouts the codon frequency of all codons in every entry in the database
+    :return: array containing the frequency of each codon in the entire database, displayed as percentages      
+    """
     all_codons =codon_count_codons_all()
 
     all_codon_count_dict={}
@@ -322,4 +362,4 @@ def codon_frequency_all_entries():
 a_try1=DNA_to_protein('678')
 a_try2=codon_frequency_all_entries()
 
-print(a_try2)
+print(Entry.get_CDS_coord('678'))
