@@ -2,8 +2,8 @@
 
 """
 ------------------------------------------------------------------------------------------------------------------------
-This is the business logic API
-Author: Miruna Serian
+---------------------------------------------BUSSINESS LOGIC API--------------------------------------------------------
+                                             Author: Miruna Serian
 ------------------------------------------------------------------------------------------------------------------------
 """
 import re
@@ -29,7 +29,8 @@ class Search:
         return DB.get_gene_entry()
 """
 ------------------------------------------------------------------------------------------------------------------------
-This is used by the front end to display information about the gene 
+-----------------------------------------------DISPLAY -----------------------------------------------------------------
+                     This is used by the front end to display information about the gene 
 ------------------------------------------------------------------------------------------------------------------------
 """
 class SummaryList:
@@ -77,7 +78,7 @@ class Entry:
         coding_seq = Entry.get_dna_seq(query)[coord[0]-1:coord[1]]
         return coding_seq
 
-    def get_codon_usage(query):
+    def get_codon_frequency(query):
         """
         displays the codon Usage
         parameters: query, type string
@@ -85,11 +86,31 @@ class Entry:
         """
         return codon_frequency(query)
 
+    def get_which_enzyme_cuts(query):
+        """
+        checks which enzyme cuts
+        :return: dictionary of enzyme names and True/False values depending if they cut
+        """
+        return check_which_enzyme_cuts()
+
+    def get_restriction_sites(query):
+        """
+        finds the positions in the query sequence at which the enzyme cuts
+        :return: dictionary of the three nezymes and their potential cutting  site
+        """
+        return find_restriction_sites(query)
+
+    def get_frequency_all_data():
+        """
+        returns the calculated frequency of all entries in the database. to be used to create a table
+        :return: a dictionary of codons and their frequencies in percentages rounded to 2 decimals
+        """
+        return codon_frequency_all_entries()
 
 
 """
 ------------------------------------------------------------------------------------------------------------------------
-Restriction enzymes
+------------------------------------------Restriction enzymes-----------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------
 """
 
@@ -99,8 +120,7 @@ Restriction enzymes
     "BsuMI": "CTCGAG"
 }
 """
-def find_restr_sites(query):
-    cutting_sites= {}
+
 def find_restriction_sites(query):
     """ this function determines the cutting sites for the enzymes. To be used by front end.
     Output: a dictionary of arrays of where the enzymes cut.
@@ -111,7 +131,7 @@ def find_restriction_sites(query):
     cutting_position_ecorI =[]
     cutting_position_BamHI =[]
     cutting_position_BsuMI =[]
-    dna_seq = Entry.get_dna_seq(query)
+    dna_seq = Entry.get_coding_seq(query)
     for a_match in  re_ecorI.finditer(dna_seq):
         cutting_position_ecorI.append(a_match.start()+1) #used +1 as enzyme cuts after first base in the recognition pattern
     for a_match in  re_BamHI.finditer(dna_seq):
@@ -146,7 +166,7 @@ def check_which_enzyme_cuts(query):
 
 """
 ------------------------------------------------------------------------------------------------------------------------
-Coding sequence and DNA to protein
+---------------------------------------Coding sequence and DNA to protein-----------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------
 """
 
@@ -177,12 +197,13 @@ def get_codons(query):
     :param query:
     :return: codons
     """
-    dna_seq = Entry.get_dna_seq(query)
+    dna_seq = Entry.get_coding_seq(query)
     codons = [dna_seq[i:i + 3] for i in range(0, len(dna_seq), 3)]
     for i in range(0, len(codons)):
         if len(codons[i])%3!=0:
             del codons[i]
     return(codons)
+
 
 def DNA_to_protein(query):
     """
@@ -237,6 +258,11 @@ def return_aligned_aa_seq(query):
     return aligned_aa_seq
 
 
+"""
+------------------------------------------------------------------------------------------------------------------------
+---------------------------------------Coding Sequences/Frequencies for all entries-------------------------------------
+------------------------------------------------------------------------------------------------------------------------
+"""
 
 
 
@@ -292,7 +318,7 @@ def codon_frequency_all_entries():
 
 
 
-
+#Just trying some bits
 a_try1=DNA_to_protein('678')
 a_try2=codon_frequency_all_entries()
 
