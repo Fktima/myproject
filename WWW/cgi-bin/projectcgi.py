@@ -1,15 +1,16 @@
 #!/usr/bin/env python3
 
 import cgi
-import cgitb; cgitb.enable(display = 0, logdir = "/path/to/logdir")  # for troubleshooting
+import cgitb
+cgitb.enable(display = 0, logdir = "/path/to/logdir")  # for troubleshooting
 print ("Content-Type: text/html/n") # Print the HTML MIME-TYPE header
 
 
 import WWW.cgi-bin.BL-API   #This is importing all the Business Tier API to display the summary list. 
 
 import sys
-sys.path.insert(0, "../BL/")
-sys.path.insert(0, "../")
+sys.path.insert(0, "WWW/cgi-bin?BL-API")
+sys.path.insert(0, "WWW/db_api")
 
 import BL-API   # Importing the business logic API
 import config   # Importing the config file for DB search
