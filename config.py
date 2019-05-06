@@ -1,8 +1,7 @@
 # config.py
 MyDB = {
-    'host': 'localhost',
-    'dbname': 'test',
-    'user': 'dwayne',
-    'password': 'BC2_1819',
-    'port': 3306
+    'host': 'hope',
+    'dbname': 'td001',
+    'user': 'td001',
+    'password': '3nw-edhqb'
 }
