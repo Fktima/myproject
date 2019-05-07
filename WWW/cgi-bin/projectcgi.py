@@ -26,7 +26,7 @@ import BL_API         # Importing the business logic API
 import config         # Importing the config file for DB search (if needed)
 form = cgi.FieldStorage()
 
-entries = BL_API.get_all_entries()           # Taking all enteries fron the form
+entries = BL_API.get_all_entries()        # Taking all enteries fron the form
 searchtype = form.getvalue("searchtype")  # Defining any entry type
 FullName = form.getvalue("FullName")      # Taking the full nime from the HTML from
 mail= form.getvalue("email")              # Taking the submitted Email Address from the HTML form
