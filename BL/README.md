@@ -14,3 +14,11 @@ Apart from the installation required to get access to the database(provided in t
 
 Pytest can be installed:
 `pip install -U pytest`
+
+## Tests
+To run the test:
+`pytest tests.py`
+
+
+### If access to hope server is not possible
+and thus not being able to use the DB api I reccommend using the **bl_api_for_testing.py**, which uses the dummy version of the database layer functions to test the code. 
