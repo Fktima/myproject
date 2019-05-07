@@ -1,39 +1,49 @@
 #!/usr/bin/env python3
 
-import cgi
+
+""" 
+This is the CGI script which takes all the entries submited on the HTML to the BL layer to format
+and diplay the result in the form of HTML.
+--------------------------
+Author: FATEMEH KAMALVAND.
+--------------------------
+"""
+
+
+import cgi;
 import cgitb
-cgitb.enable(display = 0, logdir = "/path/to/logdir")  # for troubleshooting
-print ("Content-Type: text/html/n") # Print the HTML MIME-TYPE header
+cgitb.enable()                               # For troubleshooting
+print ("Content-Type: text/html/n")          # Print the HTML MIME-TYPE header
 
 
-import WWW.cgi-bin.BL-API   #This is importing all the Business Tier API to display the summary list. 
+
 
 import sys
-sys.path.insert(0, "WWW/cgi-bin?BL-API")
-sys.path.insert(0, "WWW/db_api")
+sys.path.insert(0, "../BL/")
+sys.path.insert(0, "../")
 
-import BL-API   # Importing the business logic API
-import config   # Importing the config file for DB search
+import BL_API         # Importing the business logic API
+import config         # Importing the config file for DB search (if needed)
 form = cgi.FieldStorage()
 
-search = form["entry"].value
-searchtype = form.getvalue("searchtype")
-name = form["name"].value
-mail=  form.getvalue("email")
-enteries = BL-API.getAllEntries()
+entries = BL_API.get_all_entries()           # Taking all enteries fron the form
+searchtype = form.getvalue("searchtype")  # Defining any entry type
+FullName = form.getvalue("FullName")      # Taking the full nime from the HTML from
+mail= form.getvalue("email")              # Taking the submitted Email Address from the HTML form
 
-htnkl += "<!DOCTYPE html>"
+
+html = "<!DOCTYPE html>"
 html += "<html>\n"
 html += "<head>\n"
 html += "<title> Search Summary </title>\n"
 html += "</head>\n\n"
 html += "<body>\n"
 html += "<h1> This is the list of all entries:</h1>\n"
-html += "<p> The submited data <b>" + search + "</b> contains the following details:</p>\n"
+html += "<p> The submited data <b>" + entry + "</b> contains the following details:</p>\n"
 html += "<ul>"
 
 for entry in entries:
-   html = "   <li> + entry + </li>\n"
+   html += "<li>" + entry + "</li>\n"
 
 #for a in searchtype:
 #   if a == "gene" :
@@ -46,7 +56,17 @@ for entry in entries:
 #      html += "<li> Accession code is: </li>\n" 
 
 html += "</ul>\n"
-html += "<p> A copy of thsi result page will be in your submitted mail-box within the maximum next hour. </p>\n"
+html += "<p> Dear <b>" + name + "</b>, a copy of this result page will be in your submitted mail-box <b>" + mail + " </b> within the maximum next hour. </p>\n"
+for name in FullName:        # Process the form
+   if "name " not in form:
+      name = "none"
+   else:
+      name = form ["name"].value
+   if "mail" not in form:
+      mail = "<not given by user>"
+   else:
+      mail = form ["mail"].value
+
 html += "</body>\n"
 html += "</html>\n"
 
