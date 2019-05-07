@@ -15,8 +15,7 @@ class genbank_parser:
         3) Origin - string of letters which refer to the DNA
         sequence.
     '''
-        
-    
+       
     def __init__(self, filename):
         ''' Creates a new file parser
 
@@ -153,8 +152,7 @@ class genbank_parser:
             dictlist.append(value.strip('"'))
 
         return dictlist
-        
-
+    
     def parse_origin(self):
         ''' Parses ORIGIN described in the docstring of this class.
 

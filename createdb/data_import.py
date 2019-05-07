@@ -7,6 +7,42 @@ import config
 from re import search
 from genbank_parser import genbank_parser
 
+def populate(data):
+    ''' Populates the database with given data list.
+
+    Parameters
+        data(list):
+        list of tuples containing the data to be inserted.
+
+    '''
+    try:
+        connection = pymysql.connect(host=config.MyDB['host'],
+                                     user=config.MyDB['user'],
+                                     password=config.MyDB['password'],
+                                     db=config.MyDB['dbname'])
+        cursor = connection.cursor()
+
+        sql = ("INSERT INTO seq(dna_seq, accession_code) VALUES (%s, %s)")
+        sql2 = ("INSERT INTO attribute(accession_code, gene_id, protein_product, protein_seq, cds, chromosomal_loc) VALUES (%s, %s, %s, %s, %s, %s)")
+
+        if len(data[0]) == 2:
+            cursor.executemany(sql, data)
+            print("Data to be inserted to table seq")
+        else:
+            cursor.executemany(sql2, data)
+            print("Data to be inserted to table attribute")
+        connection.commit()
+        print("Records inserted successfully into database")
+    except pymysql.Error as error:
+        connection.rollback()
+        print("Failed to insert into MySQL table {}".format(error))
+    finally:
+        if connection:
+            cursor.close()
+            connection.close()
+            print("MySQL connection closed")
+
+
 file = genbank_parser('chrom_CDS_21')
 continue_parsing = True
 accession = []
@@ -30,24 +66,9 @@ while continue_parsing:
         continue
 
 file.close()
-print(len(features))
-print(len(sequence))
-print(len(accession))
 
 zipped = zip(sequence, accession)
 seq_data = list(zipped)
 
-connection = pymysql.connect(host=config.MyDB['host'],
-                                   user=config.MyDB['user'],
-                                   password=config.MyDB['password'],
-                                   db=config.MyDB['dbname'])
-sql = ("INSERT INTO seq(dna_seq, accession_code) VALUES (%s, %s)")
-data = seq_data
-sql2 = ("INSERT INTO attribute(accession_code, gene_id, protein_product, protein_seq, cds, chromosomal_loc) VALUES (%s, %s, %s, %s, %s, %s)")
-data2 = features
-cursor = connection.cursor()
-cursor.executemany(sql, data)
-cursor.executemany(sql2, data2)
-connection.commit()
-cursor.close()
-connection.close()
+populate(seq_data)
+populate(features)
