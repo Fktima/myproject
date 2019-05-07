@@ -288,6 +288,7 @@ class DBAccessLayer(object):
 
     
     def __del__(self):
+        ''' Closes connection object '''
         self.cxn.close()
 
 
