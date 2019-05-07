@@ -1,7 +1,10 @@
 <!DOCTYPE html>
 
-<!--  This work has been done by FATEMEH KAMALVAND and represents the HTML web page on the Front-End Tier of the 
+<!--  This work represents the HTML web page on the Front-End Tier of the 
 Biocomputong 2 project. CSS style is written in the same document which you can view this here.
+--------------------------
+Author: FATEMEH KAMALVAND.
+--------------------------s
 -->
 
 
@@ -85,10 +88,10 @@ Biocomputong 2 project. CSS style is written in the same document which you can 
               <b><u><i> Try this out! </i></u></b> and see the results behind your request. </p>
 
                <img src = "http://119.46.166.126/self_all/selfaccess9/m3/701/more_lesson6/image_lesson6/p8.png" class = "center"/>
-            
-               <p class = "list"> <a href='/cgi-bin/cgiwrap/kf001/listall.py'>List all entries</a> </p>
+           
+               <p class = "list"> <a href= "/cgi-bin/cgiwrap/kf001/projectcgi.py">List all entries</a> </p>
 
-           <form method = "post" action = "/cgi-bin/cgiwrap/kf001/projectcgi.py"> 
+           <form method = "get" action = "/cgi-bin/cgiwrap/kf001/projectcgi.py"> 
 
         <h2 class = "box" > Please sumbit your queries in the box below: </h2>
             <textarea name = "entry" row ="20" col = "80"></textarea>
@@ -108,7 +111,7 @@ Biocomputong 2 project. CSS style is written in the same document which you can 
 
                 <div>
                     <p class = "name"> Full Name: </p>
-                    <input name = "name" type = "text" maxlength = "y"/>
+                    <input name = "FullName" type = "text" maxlength = "y"/>
                     <p class = "email"> Email Address: </p>
                     <input name = "email" type = "text" />
                 </div>
