@@ -18,10 +18,12 @@ Class `Summary List` contains functions to generate a list of either:
 - protein product: `get_protein_product_list()`
 - Genbank accession codes: `get_genbank_accession_list()`  
 - chromosomal location: `get_chromosomal_loc_list()`
+- all entries:`get_all_entries()`
 
+These functions can be called to retrieve the lists from the database.
 ### Display information about specific entry  ###
 
-Class `Entry` contains functions to display information about a gene including:
+All of the below functions take the input query as parameter:
 
 - **DNA sequence**: type *string*
 
@@ -74,6 +76,3 @@ Class `Entry` contains functions to display information about a gene including:
 - **Codon frequency for all entries in the database**: type *dictionary*
 
     `Entry.get_frequency_all_data()`: returns a dictionary of all codons found in all DNA sequences in the database
-
-All functions in the `Entry` class take the query as **parameter**.
-
