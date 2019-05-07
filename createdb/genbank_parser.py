@@ -1,4 +1,5 @@
 #!usr/bin/env python3
+
 import re
 from re import match, split
 
@@ -8,15 +9,11 @@ class genbank_parser:
     Parsing the genbank file follows the order of:
         1) Accession - 6-8 character string containing the
         accession code
-        2) Features - series of strings following the Features
-        header within the genbank file. Those of importance
-        are the "source" and "CDS".
+        2) Features - strings which represent the gene,
+        amino acid sequence, chromosome location and protein
+        name.
         3) Origin - string of letters which refer to the DNA
         sequence.
-
-    Iteration of the entire file is only possible by looping
-    each of these in this same order.
-
     '''
         
     
@@ -24,7 +21,7 @@ class genbank_parser:
         ''' Creates a new file parser
 
         Parameters:
-            filename - string
+            filename (str):
             name of the file pointing to the file to be parsed
 
         Returns:
@@ -52,9 +49,7 @@ class genbank_parser:
         return line
 
     def read_line(self):
-        ''' Reads a single line removing trailing whitespace
-        This is neccessary for simplifying the searching of
-        keyword string.
+        ''' 
         '''
         
         line = self.openfile.readline().strip()
@@ -64,10 +59,8 @@ class genbank_parser:
     def check_eof(self):
         ''' Identifies when the end of file has been reached
         Return:
-            True - if the next line read after '//' is
-            the string added to the end of the file
-            aptly called 'eof'.
-            False - if next line read does not start with 'eof'
+            boolean: true if the next line read after '//' is 'eof,
+            false if next line read does not start with 'eof'.
         '''
         line = self.read_line()
         if line.startswith ('//'):
@@ -78,13 +71,10 @@ class genbank_parser:
                 return False
 
     def parse_accession(self):
-        # string or list?
-        ''' Parses the ACCESSION code
+        ''' Parses the accession code presented by the header "ACCESSION"
 
         Returns
-            accession (string):
-            returns accession code as a string and if two
-            accession codes are given, returns the first
+            accession (string): returns the first accession code in the string
         '''
         
         accession = ''
@@ -98,14 +88,13 @@ class genbank_parser:
         return accession
 
     def parse_features(self):
-        ''' Parses FEATURES described in the docsting of this class.
+        ''' Parses features described in the docstring of this class presented by the headers
+        "FEATURES" and "CDS".
 
         Return:
-        features (list):
-        list containing the gene ID, protein product,
-        protein sequence, coding sequence, and chromosome
-        location.
-
+            features (list): list containing the gene ID, protein product,
+            protein sequence, coding sequence, and chromosome
+            location.
         '''
         
         line = self.find_keyword('FEATURES')
@@ -133,13 +122,10 @@ class genbank_parser:
         of this class.
 
         Return:
-        dictlist (list):
-        list containing the gene ID, protein product,
-        protein sequence, coding sequence, and chromosome
-        location.
-
+            dictlist (list): list of strings containing the gene ID,
+            protein product, protein sequence, coding sequence, and
+            chromosome location.
         '''
-        
         attributes = {}
         dictlist = []
         
@@ -173,9 +159,7 @@ class genbank_parser:
         ''' Parses ORIGIN described in the docstring of this class.
 
         Return:
-        sequence (string):
-        string containing sequence.
-
+            sequence (string): string containing DNA sequence.
         '''
         
         sequence = ''
@@ -194,11 +178,11 @@ class genbank_parser:
     def parse_location(self, location_string):
         ''' Formats location strings in the format:
 
-        x..y - representative of a joined location
-
+        'x..y'
+        
         Return:
-        location_string (string):
-        string representing the location of respective feature
+            location_string (string): string representing the location of
+            the coding sequence for a gene within the DNA sequence.
         '''
         
         terms = match('\w*', location_string)
@@ -217,7 +201,7 @@ class genbank_parser:
         return location_string
     
     def close(self):
-        ''' closes the file object '''
+        ''' Closes the file object '''
         self.openfile.close()
 
 
