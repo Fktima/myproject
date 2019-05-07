@@ -8,7 +8,7 @@
 """
 import re
 from collections import Counter
-import dummy as DB #using the dummy code instead of the DB api
+import ./DB/dbapi as DB #using the dummy code instead of the DB api
 
 class Search:
     """ Class that retrieves the query given by the user
