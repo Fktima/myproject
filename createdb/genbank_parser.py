@@ -15,7 +15,8 @@ class genbank_parser:
         3) Origin - string of letters which refer to the DNA
         sequence.
     '''
-       
+        
+    
     def __init__(self, filename):
         ''' Creates a new file parser
 
@@ -41,17 +42,9 @@ class genbank_parser:
         '''
         line = ''
         while not line.startswith(keyword):
-            line = self.read_line()
+            line = self.openfile.readline().strip()
 
         line = line[len(keyword):].strip()
-
-        return line
-
-    def read_line(self):
-        ''' 
-        '''
-        
-        line = self.openfile.readline().strip()
 
         return line
 
@@ -61,9 +54,9 @@ class genbank_parser:
             boolean: true if the next line read after '//' is 'eof,
             false if next line read does not start with 'eof'.
         '''
-        line = self.read_line()
+        line = self.openfile.readline().strip()
         if line.startswith ('//'):
-            line = self.read_line()
+            line = self.openfile.readline().strip()
             if line.startswith('eof'):
                 return True
             else:
@@ -79,7 +72,7 @@ class genbank_parser:
         accession = ''
         line = self.find_keyword('ACCESSION')
         if len(line) > 8:
-            line = split('s+', line)
+            line = split('\\s+', line)
             accession = line[0]
         else:
             accession = line
@@ -99,15 +92,15 @@ class genbank_parser:
         line = self.find_keyword('FEATURES')
         
         while not line.startswith('/'):
-            line = self.read_line()
+            line = self.openfile.readline().strip()
         chrom = self.parse_attributes(line)
         line = self.find_keyword('CDS')
         location = line.strip()
-        line = self.read_line()
+        line = self.openfile.readline().strip()
         
         while not line.startswith('/'):
             location += line
-            line = self.read_line()
+            line = self.openfile.readline().strip()
             
         location = self.parse_location(location)
         features = self.parse_attributes(line)
@@ -152,7 +145,8 @@ class genbank_parser:
             dictlist.append(value.strip('"'))
 
         return dictlist
-    
+        
+
     def parse_origin(self):
         ''' Parses ORIGIN described in the docstring of this class.
 
@@ -162,7 +156,7 @@ class genbank_parser:
         
         sequence = ''
         line = self.find_keyword('ORIGIN')
-        line = self.read_line()
+        line = self.openfile.readline().strip()
         
         while match('^\d+.*', line):
             seq = split('\s+', line)

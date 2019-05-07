@@ -5,7 +5,7 @@ sys.path.insert(0, "../")
 import pymysql.cursors
 import config
 
-class DBAccessLayer(object):
+class DB_API(object):
     ''' Use this Class to establish connection with the database and execute searching '''
 
     def __init__(self):
@@ -30,8 +30,8 @@ class DBAccessLayer(object):
     def getAllaccession(self):
         ''' Retrieves the accession codes for all entries in the database '''
         
-        accession = self.cur.execute("SELECT accession_code from attribute")
-        accession = self.cur.fetchall()
+        accession = self.dictcur.execute("SELECT accession_code as AC from attribute")
+        accession = self.dictcur.fetchall()
 
         return accession
     
@@ -264,7 +264,7 @@ class DBAccessLayer(object):
             protein sequence and coding sequence.
 
         '''
-        sql = (" SELECT dna_seq as DNA_seq, protein_seq as amnio_acid_sequence, cds as CDS" 
+        sql = (" SELECT dna_seq as DNA_seq, protein_seq as aminoacid_sequence, cds as CDS" 
               " from attribute a INNER JOIN seq ON a.accession_code = seq.accession_code "
               " WHERE a.accession_code LIKE '%s' OR protein_product LIKE '%s' OR gene_id LIKE '%s' " %(query, query, query))
 
