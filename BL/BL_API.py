@@ -2,7 +2,7 @@
 
 """
 ------------------------------------------------------------------------------------------------------------------------
----------------------------------------------BUSSINESS LOGIC API--------------------------------------------------------
+---------------------------------------------BUSINESS LOGIC API--------------------------------------------------------
                                              Author: Miruna Serian
 ------------------------------------------------------------------------------------------------------------------------
 """
@@ -40,95 +40,102 @@ class SummaryList:
     should diplay the lists and one could click to see the details the particular gene
     """
     def get_gene_identifiers_list():
-        gene_identifiers = DB.get_gene_list() #this ins not the actual name of the funcion from the DB API
+        """retrieves a list of allgene ids which the user can click on and get information on the gene"""
+
+        gene_identifiers = DB.get_gene_id()
         return gene_identifiers
     def get_protein_product_list():
-        protein_product_names=DB.get_protein_product_names() #this ins not the actual name of the funcion from the DB API
+        """retrieves a list of all protein product namesmwhich the user can click on and get information on the gene"""
+
+        protein_product_names=DB.get_protein_product()
         return protein_product_names
     def get_genbank_accession_list():
-        genbank_accession_list = DB.get_accession_list() #this ins not the actual name of the funcion from the DB API
+        """retrieves a list of all aceession codes which the user can click on and get information on the gene"""
+        genbank_accession_list = DB.get_accession_code()
         return genbank_accession_list
     def get_chromosomal_loc_list():
-        chromosomal_locations = DB.get_chromosomal_locations() #this ins not the actual name of the funcion from the DB API
+        """retrieves a list of all chromosomal locations which the user can click on and get information on the gene"""
+        chromosomal_locations = DB.get_chromosomal_loc()
         return chromosomal_locations
+    def get_all_entries():
+        """retrieves a list of all entries in the databsse"""
+        return DB.getAllEntries()
 
-class Entry:
+
+
+def get_dna_seq(query):
+    """ displays DNA seq associated with the query"""
+    dna_seq = DB.get_gene_entry(query)["DNA_seq"]
+    if not dna_seq.isalpha():
+        raise TypeError("Not valid")
+    else:
+        return dna_seq
+
+def get_aminoacid_seq(query):
+    """ displays the amino acid sequence
+     parameters: query, type st
+     ring
+    returns the amino acid sequence"""
+    amino_acid_seq =  DB.get_gene_entry(query)["aminoacid_sequence"]
+    if not amino_acid_seq.isalpha(): #checks if all characters in the string are alphabets
+        raise TypeError("Not valid")
+    else:
+        return amino_acid_seq
+
+def get_coding_seq(query):
     """
-    Class that displays information for a particular entry
+    displays the coding region
+    Parameters: query, type string
+    Ouput: CDS
     """
-    def get_dna_seq(query):
-        """ displays DNA seq associated with the query"""
-        dna_seq = DB.get_gene_entry(query)["DNA_seq"]
-        if not dna_seq.isalpha():
-            raise TypeError("Not valid")
-        else:
-            return dna_seq
 
-    def get_aminoacid_seq(query):
-        """ displays the amino acid sequence
-         parameters: query, type st
-         ring
-        returns the amino acid sequence"""
-        amino_acid_seq =  DB.get_gene_entry(query)["aminoacid_sequence"]
-        if not amino_acid_seq.isalpha(): #checks if all characters in the string are alphabets
-            raise TypeError("Not valid")
-        else:
-            return amino_acid_seq
+    coord =DB.get_gene_entry(query)['CDS']
+    coding_seq =get_dna_seq(query)[coord[0]-1:coord[1]]
+    return coding_seq
 
-    def get_coding_seq(query):
-        """
-        displays the coding region
-        Parameters: query, type string
-        Ouput: CDS
-        """
+def get_CDS_coord(query):
+    """
+    displays the coordinates of CDS
+    :return: a list of lists containing pairs of 2 coordinates
+    """
+    valid = False
+    cds_coord =  DB.get_gene_entry(query)['CDS']
+    for coord in cds_coord:
+        if type(coord)==int and coord>0:
+            valid = True
+    if valid == True:
+        return cds_coord
+    else:
+        raise TypeError("Not valid")
 
-        coord =DB.get_gene_entry(query)['CDS']
-        coding_seq = Entry.get_dna_seq(query)[coord[0]-1:coord[1]]
-        return coding_seq
+def get_codon_frequency(query):
+    """
+    displays the codon Usage
+    parameters: query, type string
+    output: frequencies, type dictionary
+    """
+    return codon_frequency(query)
 
-    def get_CDS_coord(query):
-        """
-        displays the coordinates of CDS
-        :return: a list of lists containing pairs of 2 coordinates
-        """
-        valid = False
-        cds_coord =  DB.get_gene_entry(query)['CDS']
-        for coord in cds_coord:
-            if type(coord)==int and coord>0:
-                valid = True
-        if valid == True:
-            return cds_coord
-        else:
-            raise TypeError("Not valid")
+def get_which_enzyme_cuts(query):
+    """
+    checks which enzyme cuts
+    :return: dictionary of enzyme names and True/False values depending if they cut
+    """
+    return check_which_enzyme_cuts(query)
 
-    def get_codon_frequency(query):
-        """
-        displays the codon Usage
-        parameters: query, type string
-        output: frequencies, type dictionary
-        """
-        return codon_frequency(query)
+def get_restriction_sites(query):
+    """
+    finds the positions in the query sequence at which the enzyme cuts
+    :return: dictionary of the three enzymes and their potential cutting  site
+    """
+    return find_restriction_sites(query)
 
-    def get_which_enzyme_cuts(query):
-        """
-        checks which enzyme cuts
-        :return: dictionary of enzyme names and True/False values depending if they cut
-        """
-        return check_which_enzyme_cuts()
-
-    def get_restriction_sites(query):
-        """
-        finds the positions in the query sequence at which the enzyme cuts
-        :return: dictionary of the three nezymes and their potential cutting  site
-        """
-        return find_restriction_sites(query)
-
-    def get_frequency_all_data():
-        """
-        returns the calculated frequency of all entries in the database. to be used to create a table
-        :return: a dictionary of codons and their frequencies in percentages rounded to 2 decimals
-        """
-        return codon_frequency_all_entries()
+def get_frequency_all_data():
+    """
+    returns the calculated frequency of all entries in the database. to be used to create a table
+    :return: a dictionary of codons and their frequencies in percentages rounded to 2 decimals
+    """
+    return codon_frequency_all_entries()
 
 """
 ------------------------------------------------------------------------------------------------------------------------
@@ -164,7 +171,7 @@ def get_codons(query):
     :param query:
     :return: codons
     """
-    dna_seq = Entry.get_dna_seq(query)
+    dna_seq = get_dna_seq(query)
     codons = [dna_seq[i:i + 3] for i in range(0, len(dna_seq), 3)]
     for i in range(0, len(codons)):
         if len(codons[i])%3!=0:
@@ -211,7 +218,7 @@ def check_alignment(query):
     :param query:
     :return: true of fals
     """
-    aa_Seq_genbank = Entry.get_aminoacid_seq(query)
+    aa_Seq_genbank = get_aminoacid_seq(query)
     aa_transformed = DNA_to_protein(query)
     if aa_Seq_genbank == aa_transformed:
         return True
@@ -219,7 +226,7 @@ def check_alignment(query):
         return False
 def return_aligned_aa_seq(query):
     if check_alignment(query) is True:
-        aligned_aa_seq = Entry.get_aminoacid_seq(query)
+        aligned_aa_seq = get_aminoacid_seq(query)
     else:
         aligned_aa_seq = DNA_to_protein(query)
     return aligned_aa_seq
@@ -238,7 +245,7 @@ def get_all_codons():
     retrieves all codons for al entries in the database
     :return:  a list of lists of codons. each sublist contains the codons corresponding to a single entry
     """
-    all_entries =DB.get_all_entries()
+    all_entries =DB.getAll()
     list_all_codons_count = []
     for entry in all_entries:
         dna_seq = entry["DNA_seq"]
@@ -292,7 +299,7 @@ def codon_frequency_all_entries():
     codon_freq_all_dict={}
     for codon_list in the_codons:
         for codon in codon_list:
-            codon_freq_all_dict[codon]=round(((codon_list.count(codon))/sum(codon_usage_all_entries().values()))*100 , 2)
+            codon_freq_all_dict[codon]=round(((codon_list.count(codon))/(sum(codon_usage_all_entries().values())))*100, 2)
     return codon_freq_all_dict
 
 
@@ -316,7 +323,7 @@ def non_coding_dna_seq(query):
     :return: non_coding_seq type string
     """
     non_coding_seq = ''
-    whole_dna_seq = Entry.get_dna_seq(query)
+    whole_dna_seq = get_dna_seq(query)
     coord =DB.get_gene_entry(query)['CDS']
     start = coord[0]
     end = coord[1]
@@ -379,4 +386,6 @@ def check_which_enzyme_cuts(query):
 a_try1=DNA_to_protein('678')
 a_try2=codon_frequency_all_entries()
 
-print(check_which_enzyme_cuts('678'))
+print(get_frequency_all_data())
+print(codon_frequency_all_entries())
+
