@@ -24,6 +24,12 @@ sys.path.insert(0, "../")
 
 import BL_API         # Importing the business logic API
 import config         # Importing the config file for DB search (if needed)
+import smtplib
+Import osdef send_via_SMTP (SMTP_SERVER, TO, FROM, SUBJECT, MESSAGE):    # Add the From:, To:, and Subject: headers at the start.    message = 'From: %s\r\nTo: %s\r\nSubject: %s\r\n\r\n' % (FROM, TO, SUBJECT)    message = message + MESSAGE    server = smtplib.SMTP(SMTP_SERVER)    # server.set_debuglevel(1)    server.sendmail(FROM, TO, message)    server.quit()def send_via_sendmail (TO, FROM, SUBJECT, MESSAGE):    from email.mime.text import MIMEText    from subprocess import Popen, PIPE    msg = MIMEText(MESSAGE)    msg['To'] = TO    msg['From'] = FROM    msg['Subject'] = SUBJECT    p = Popen(['/usr/sbin/sendmail', '-i', '-t'], stdin=PIPE)    p.communicate(msg.as_string())#    p = os.popen(['/usr/sbin/sendmail -i -t', 'w')#    p.write(msg.as_string())#    status = p.close()#    if status:#       print ('sendmail exit status %d' % status)
+
+
+
+
 form = cgi.FieldStorage()
 
 entries = BL_API.get_all_entries()        # Taking all enteries fron the form
